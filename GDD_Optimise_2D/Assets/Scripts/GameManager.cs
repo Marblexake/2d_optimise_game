@@ -644,6 +644,7 @@ public class GameManager : MonoBehaviour
                     // Increment score, since the player has scored a point
                     //
                     score++;
+                    UpdateScore();
                 }
                 else
                 {
@@ -669,9 +670,6 @@ public class GameManager : MonoBehaviour
             background3.transform.position = Vector3.Lerp(bk3PositionA, bk3PositionB, time);        
         }
 
-        // Update the various UI components
-        //
-        UpdateScore();
     }
 
 
