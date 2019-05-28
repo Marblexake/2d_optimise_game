@@ -58,8 +58,6 @@ public class GameManager : MonoBehaviour
     {
         //Placing all the images into an array right at the start of the game (Marcus)
         prefabs = Resources.LoadAll("Prefabs/sprites/animals", typeof(GameObject));
-
-        StartCoroutine(spawnBullets());
         // Find the height and width of the game view in world units
         //
         gameHeight = Camera.main.orthographicSize * 2f;
@@ -452,31 +450,31 @@ public class GameManager : MonoBehaviour
 
     // To make the game a bit harder to play, the sprites are continuously rotated.
     //
-    private void RotateSprites()
-    {
-        // Loop across all the frames in the frames list
-        //
-        foreach(GameObject frame in frames)
-        {
-            // Loop across the top and bottom parent gameobjects
-            //
-            for(int i=0; i < frame.gameObject.transform.childCount; i++)
-            {
-                // Get the top or bottom parent. top is child 0, and bottom is child 1
-                //
-                GameObject panel = frame.gameObject.transform.GetChild(i).gameObject;
+    //private void RotateSprites()
+    //{
+    //    // Loop across all the frames in the frames list
+    //    //
+    //    foreach(GameObject frame in frames)
+    //    {
+    //        // Loop across the top and bottom parent gameobjects
+    //        //
+    //        for(int i=0; i < frame.gameObject.transform.childCount; i++)
+    //        {
+    //            // Get the top or bottom parent. top is child 0, and bottom is child 1
+    //            //
+    //            GameObject panel = frame.gameObject.transform.GetChild(i).gameObject;
 
-                // Now loop across each child sprites in top or bottom, and rotate it
-                // by 5 degrees around the Z axis
-                //
-                for (int j = 0; j < panel.gameObject.transform.childCount; j++)
-                {
-                    GameObject sprite = panel.gameObject.transform.GetChild(j).gameObject;
-                    sprite.transform.Rotate(new Vector3(0f, 0f, 5f));
-                }
-            }
-        }
-    }
+    //            // Now loop across each child sprites in top or bottom, and rotate it
+    //            // by 5 degrees around the Z axis
+    //            //
+    //            for (int j = 0; j < panel.gameObject.transform.childCount; j++)
+    //            {
+    //                GameObject sprite = panel.gameObject.transform.GetChild(j).gameObject;
+    //                sprite.transform.Rotate(new Vector3(0f, 0f, 5f));
+    //            }
+    //        }
+    //    }
+    //}
 
     // Update the Seconds text in the UI
     //
@@ -672,17 +670,8 @@ public class GameManager : MonoBehaviour
             background3.transform.position = Vector3.Lerp(bk3PositionA, bk3PositionB, time);        
         }
 
-    }
-
-
-    IEnumerator spawnBullets()
-    {
-        for (; ; )
-        {
-            UpdateTime();
-            ShowBackgroundCharacters();
-            yield return new WaitForSeconds(1);
-        }
+        UpdateTime();
+        ShowBackgroundCharacters();
 
     }
 
