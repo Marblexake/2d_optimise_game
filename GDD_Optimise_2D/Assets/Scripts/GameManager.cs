@@ -671,8 +671,19 @@ public class GameManager : MonoBehaviour
 
         // Update the various UI components
         //
-        UpdateTime();
         UpdateScore();
-        ShowBackgroundCharacters();
     }
+
+
+    IEnumerator spawnBullets()
+    {
+        for (; ; )
+        {
+            UpdateTime();
+            ShowBackgroundCharacters();
+            yield return new WaitForSeconds(1f);
+        }
+
+    }
+
 }
