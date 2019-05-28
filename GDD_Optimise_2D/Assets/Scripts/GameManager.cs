@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     public GameObject background1;                  // Background sprite that oscillates left to right 
     public GameObject background2;                  // Background sprite that oscillates left to right 
     public GameObject background3;                  // Background sprite that oscillates left to right 
+    public Object[] prefabs;                        // This is the array in which all the sprites/prefabs is kept
+
 
     public float gameWidth { get; private set; }    // Width of the game view
     public float gameHeight { get; private set; }   // Height of the game view
@@ -54,6 +56,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        //Placing all the images into an array right at the start of the game (Marcus)
+        prefabs = Resources.LoadAll("Prefabs/sprites/animals", typeof(GameObject));
         // Find the height and width of the game view in world units
         //
         gameHeight = Camera.main.orthographicSize * 2f;
@@ -159,22 +163,18 @@ public class GameManager : MonoBehaviour
         // Get the number of children of top. This is the number of sprites for the top part
         // of the frame. 
         //
-        int numChildren = top.transform.childCount;
+        int numChildren = top.transform.childCount; //Always returns 6, maybe it can be called in awake instead?
 
         // Loop across all the top children in the new frame
         //
         for (int i = 0; i < numChildren; i++)
         {
-            // Load and store all the sprite prefabs in an array. The Resources.LoadAll() function
-            // return an array of Objects.
-            //
-            Object[] prefabs = Resources.LoadAll("Prefabs/Sprites/animals", typeof(GameObject));
-
             // Each sprite gameobject in the new frame must be replaced with a new sprite gameobject.
             // Choose a random sprite from the prefabs array.
             //
             int randomIndex = Random.Range(0, prefabs.Length);
             GameObject sprite = (GameObject)Instantiate(prefabs[randomIndex]);
+            //fruit.GetComponent<SpriteRenderer>().sprite = fruitSprites[9];
 
             // Get a reference to the current sprite's transform. This is so that the newly created
             // sprite can be put in the same position before the existing sprite is destroyed.
@@ -244,10 +244,8 @@ public class GameManager : MonoBehaviour
             else
             {
                 // The frame is not mirrored, so the bottom sprites must be different from the top
-                // sprites. Just get a reference to all the prefabs in an array, then select one at
-                // random.
+                // sprites.
                 //
-                Object[] prefabs = Resources.LoadAll("Prefabs/Sprites/animals", typeof(GameObject));
                 int randomIndex = Random.Range(0, prefabs.Length);
                 sprite = (GameObject)Instantiate(prefabs[randomIndex]);
             }
@@ -291,11 +289,6 @@ public class GameManager : MonoBehaviour
         //
         foreach (GameObject frame in frames)
         {
-            // We need to have a reference to the GameManager object so that we can access
-            // the animation speed
-            //
-            GameManager gm = GameObject.Find("GameManager").GetComponent<GameManager>();
-
             // If a mirrored frame is selected, it will be destroyed. This leaves a gap in the 
             // row of frames. All the frames to the right should speed up to close the gap. So
             // for each frame, find the distance to the frame on its left. If the distance is
@@ -305,11 +298,11 @@ public class GameManager : MonoBehaviour
 
             if (distance > frameWidth * 0.5f)
             {
-                frame.GetComponent<Rigidbody>().velocity = new Vector3(gm.speed * 10f, 0f, 0f);
+                frame.GetComponent<Rigidbody>().velocity = new Vector3(speed * 10f, 0f, 0f);
             }
             else
             {
-                frame.GetComponent<Rigidbody>().velocity = new Vector3(gm.speed, 0f, 0f);
+                frame.GetComponent<Rigidbody>().velocity = new Vector3(speed, 0f, 0f);
             }
         }
 
@@ -452,7 +445,7 @@ public class GameManager : MonoBehaviour
             {
                 if (hit.collider != null)
                 {
-                    frame = hit.collider.gameObject;
+                    frame = hit.collider.gameObject; //returns the frame hit
                 }
             }
         }
@@ -562,7 +555,7 @@ public class GameManager : MonoBehaviour
         {
             // Rotate all the frame sprites
             //
-            RotateSprites();
+            //RotateSprites();
 
             // Animate the frames to the left
             //
@@ -620,6 +613,7 @@ public class GameManager : MonoBehaviour
                         if(f == hitFrame)
                         {
                             frameToDelete = hitFrame;
+                            Debug.Log(hitFrame);
                         }
                     }
 
@@ -628,6 +622,7 @@ public class GameManager : MonoBehaviour
                     //
                     float newX = endFrame.transform.position.x + frameWidth;
                     float gap = frameWidth * 0.1f;
+                    //CreateFrame(hitframe);
                     GameObject newFrame = CreateFrame();
                     newFrame.name = frameToDelete.name;
                     newFrame.transform.position = new Vector3(newX + gap, 0f, 0f);

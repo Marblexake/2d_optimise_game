@@ -12,7 +12,7 @@
 
 6.    int numChildren = top.transform.childCount; children count same, doesn't need to constantly update.
 
-7.    Objects[] prefabs = _____ ; Bring it outside the loop and store it into a fixed		variable so that it doesn't require constantly be called out.
+7.    Objects[] prefabs = _____ ; Bring it outside the loop and store it into a fixed variable so that it doesn't require constantly be called out.
 
 8)	Line 177 Don't create new object, reuse the same object and change the sprite
 	if we reuse the GameObject, line 188 and 189 is unneccessary

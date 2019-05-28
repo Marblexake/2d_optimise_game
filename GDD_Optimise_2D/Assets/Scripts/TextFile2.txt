@@ -1,0 +1,20 @@
+﻿
+
+private GameObject CreateFrame(GameObject something)
+{
+	GameObject top = something.gameObject.transform.GetChild(0).gameObject;
+
+	int numChildren = top.transform.childCount;
+	
+	for (int i = 0; i < numChildren; i++)
+        {
+            int randomIndex = Random.Range(0, sprites.Length);
+			GameObject topChild = top.transform.GetChild(i);
+
+			topChild.GetComponent<SpriteRenderer>().sprite = sprites[randomIndex];
+            //fruit.GetComponent<SpriteRenderer>().sprite = fruitSprites[9];
+
+        }
+
+}
+

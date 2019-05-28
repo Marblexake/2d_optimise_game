@@ -1020,6 +1020,7 @@ MonoBehaviour:
   background1: {fileID: 1368951564}
   background2: {fileID: 1046666315}
   background3: {fileID: 1449890812}
+  prefabs: []
 --- !u!4 &819658742
 Transform:
   m_ObjectHideFlags: 0
