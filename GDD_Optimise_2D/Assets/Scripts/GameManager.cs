@@ -318,8 +318,6 @@ public class GameManager : MonoBehaviour
     //
     float GetDistanceToNeighbour(GameObject frame)
     {
-        GameManager gm = GameObject.Find("GameManager").GetComponent<GameManager>();
-
         // Get the width of the frame
         //
         float frameWidth = frame.gameObject.GetComponent<BoxCollider>().bounds.size.x;
@@ -382,11 +380,13 @@ public class GameManager : MonoBehaviour
     //
     private void CheckRespawnFrames()
     {
+        GameObject frame = null;
+
         // Loop backwards over the frames list
         //
         for(int i = frames.Count-1; i >= 0; i--)
         {
-            GameObject frame = frames[i];
+            frame = frames[i];
 
             // Check if the frame's X position is less then leftExtent. If yes, then it
             // will be destroyed.
@@ -398,18 +398,18 @@ public class GameManager : MonoBehaviour
                 float newX = endFrame.transform.position.x + frameWidth;
 
                 float gap = frameWidth * 0.1f;
-                GameObject newFrame = CreateFrame();
-                newFrame.name = frame.name;
+                //GameObject newFrame = CreateFrame(); need to "update" or randomise the newly swapped frame.
+                //newFrame.name = frame.name;
 
                 // Set the new frame's position so that it is at the end of the row of 
                 // frames, with a gap between the new frame and the current end frame
                 // (the new frame will become the current end frame in the next line)
                 //
-                newFrame.transform.position = new Vector3(newX + gap, 0f, 0f);
+                frame.transform.position = new Vector3(newX + gap, 0f, 0f);
 
                 // Update endFrame to be the new frame
                 //
-                endFrame = newFrame;
+                endFrame = frame;
 
                 // Remove from the frames list the frame that is to be deleted
                 //
@@ -417,11 +417,7 @@ public class GameManager : MonoBehaviour
 
                 // Add the new frame to the frames list
                 //
-                frames.Add(newFrame);
-
-                // Destroy the frame that is to be deleted
-                //
-                Destroy(frame);
+                frames.Add(frame);
             }
         }
     }
