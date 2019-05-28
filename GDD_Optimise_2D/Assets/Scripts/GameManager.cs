@@ -58,6 +58,8 @@ public class GameManager : MonoBehaviour
     {
         //Placing all the images into an array right at the start of the game (Marcus)
         prefabs = Resources.LoadAll("Prefabs/sprites/animals", typeof(GameObject));
+
+        StartCoroutine(spawnBullets());
         // Find the height and width of the game view in world units
         //
         gameHeight = Camera.main.orthographicSize * 2f;
@@ -679,7 +681,7 @@ public class GameManager : MonoBehaviour
         {
             UpdateTime();
             ShowBackgroundCharacters();
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1);
         }
 
     }
