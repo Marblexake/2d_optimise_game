@@ -1,20 +1,53 @@
-﻿
+﻿private GameObject CreateFrame()
+    {
+        GameObject newFrame = Instantiate(framePrefab);
 
-private GameObject CreateFrame(GameObject something)
-{
-	GameObject top = something.gameObject.transform.GetChild(0).gameObject;
+        GameObject top = newFrame.gameObject.transform.GetChild(0).gameObject;
 
-	int numChildren = top.transform.childCount;
-	
-	for (int i = 0; i < numChildren; i++)
+        // Get the number of children of top. This is the number of sprites for the top part
+        // of the frame. 
+        //
+        int numChildren = top.transform.childCount; //Always returns 6, maybe it can be called in awake instead?
+
+        // Loop across all the top children in the new frame
+        //
+        for (int i = 0; i < numChildren; i++)
         {
-            int randomIndex = Random.Range(0, sprites.Length);
-			GameObject topChild = top.transform.GetChild(i);
-
-			topChild.GetComponent<SpriteRenderer>().sprite = sprites[randomIndex];
-            //fruit.GetComponent<SpriteRenderer>().sprite = fruitSprites[9];
+			//Need better explanation here
+            int randomIndex = Random.Range(0, prefabs.Length); //Move this out of the loop 
+            top.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)prefabs[randomIndex];
 
         }
 
-}
+        // Now we replace the default bottom sprites with new sprites
+        //
+        GameObject bottom = newFrame.gameObject.transform.GetChild(1).gameObject;
 
+        // Get a random number between 1 and 10. For integers, the Random.Range function is not
+        // inclusive of the max value argument, which is why it is 11.
+        int rand = Random.Range(1, 11);
+        bool mirror = rand > 0 ? true : false;
+
+        // Loop over all the bottom sprites
+        //
+        for (int i = 0; i < numChildren; i++)
+        {            
+            if (mirror)
+            {
+                //sprite = Instantiate(top.transform.GetChild(i + numChildren).gameObject);
+
+                bottom.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = top.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite;
+            }
+            else
+            {
+                // The frame is not mirrored, so the bottom sprites must be different from the top
+                // sprites.
+                //
+                int randomIndex = Random.Range(0, prefabs.Length);
+                bottom.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)prefabs[randomIndex];
+            }
+        }      
+        // Return the newly created frame back to the calling code
+        //
+        return newFrame;
+    }

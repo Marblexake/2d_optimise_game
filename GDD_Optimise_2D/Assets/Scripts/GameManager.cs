@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     private Vector3 bk3PositionA, bk3PositionB;
 
     private float frameWidth;               // The width of a frame of sprites
-    private List<GameObject> frames;        // Created frames are stored in this list
+    private List<GameObject> framesList;        // Created frames are stored in this list
     private bool initialised = false;       // When initialised is true, the game can start
 
     int score = 0;
@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
         rabbit.SetActive(false);
         panda.SetActive(false);
 
-        frames = new List<GameObject>();
+        framesList = new List<GameObject>();
 
         // Create all the frames for the start of the game.
         //
@@ -128,9 +128,9 @@ public class GameManager : MonoBehaviour
             float gap = frameWidth * 0.1f;
 
             currX += frameWidth + gap;
-            frames.Add(frame);
+            framesList.Add(frame);
         }
-        endFrame = frames[frames.Count-1];  // endFrame is the last frame added to the list
+        endFrame = framesList[framesList.Count-1];  // endFrame is the last frame added to the list
         initialised = true;                 // Set to true so that the game can start
     }
 
@@ -246,7 +246,7 @@ public class GameManager : MonoBehaviour
     {
         // Loop over all the frames in the frames list
         //
-        foreach (GameObject frame in frames)
+        foreach (GameObject frame in framesList)
         {
             // If a mirrored frame is selected, it will be destroyed. This leaves a gap in the 
             // row of frames. All the frames to the right should speed up to close the gap. So
@@ -313,7 +313,7 @@ public class GameManager : MonoBehaviour
             // HINT: Why is this function doing two different things?
             //
             bool leftFrame = true;
-            foreach(GameObject f in frames)
+            foreach(GameObject f in framesList)
             {
                 if(frame.gameObject.transform.position.x > f.gameObject.transform.position.x)
                 {
@@ -343,9 +343,9 @@ public class GameManager : MonoBehaviour
 
         // Loop backwards over the frames list
         //
-        for(int i = frames.Count-1; i >= 0; i--)
+        for(int i = framesList.Count-1; i >= 0; i--)
         {
-            frame = frames[i];
+            frame = framesList[i];
 
             // Check if the frame's X position is less then leftExtent. If yes, then it
             // will be destroyed.
@@ -368,13 +368,7 @@ public class GameManager : MonoBehaviour
                 //
                 endFrame = frame;
 
-                // Remove from the frames list the frame that is to be deleted
-                //
-                frames.Remove(frame);
-
-                // Add the new frame to the frames list
-                //
-                frames.Add(frame);
+                // Changes: Removed some old code as they are not needed anymore since object pooling is implemented here.
             }
         }
     }
@@ -404,34 +398,6 @@ public class GameManager : MonoBehaviour
         }
         return frame;
     }
-
-    // To make the game a bit harder to play, the sprites are continuously rotated.
-    //
-    //private void RotateSprites()
-    //{
-    //    // Loop across all the frames in the frames list
-    //    //
-    //    foreach(GameObject frame in frames)
-    //    {
-    //        // Loop across the top and bottom parent gameobjects
-    //        //
-    //        for(int i=0; i < frame.gameObject.transform.childCount; i++)
-    //        {
-    //            // Get the top or bottom parent. top is child 0, and bottom is child 1
-    //            //
-    //            GameObject panel = frame.gameObject.transform.GetChild(i).gameObject;
-
-    //            // Now loop across each child sprites in top or bottom, and rotate it
-    //            // by 5 degrees around the Z axis
-    //            //
-    //            for (int j = 0; j < panel.gameObject.transform.childCount; j++)
-    //            {
-    //                GameObject sprite = panel.gameObject.transform.GetChild(j).gameObject;
-    //                sprite.transform.Rotate(new Vector3(0f, 0f, 5f));
-    //            }
-    //        }
-    //    }
-    //}
 
     // Update the Seconds text in the UI
     //
@@ -506,10 +472,6 @@ public class GameManager : MonoBehaviour
         //
         if(initialised)
         {
-            // Rotate all the frame sprites
-            //
-            //RotateSprites();
-
             // Animate the frames to the left
             //
             MoveFrames();
@@ -561,7 +523,7 @@ public class GameManager : MonoBehaviour
 
                     // Find the frame to delete in the frames list
                     //
-                    foreach(GameObject f in frames)
+                    foreach(GameObject f in framesList)
                     {
                         if(f == hitFrame)
                         {
@@ -581,9 +543,9 @@ public class GameManager : MonoBehaviour
                     newFrame.transform.position = new Vector3(newX + gap, 0f, 0f);
 
                     endFrame = newFrame;
-                    frames.Add(newFrame);
+                    framesList.Add(newFrame);
 
-                    frames.Remove(frameToDelete);
+                    framesList.Remove(frameToDelete);
                     Destroy(frameToDelete);
                     
                     // Play a particle system for success or failure. The particle system to be
