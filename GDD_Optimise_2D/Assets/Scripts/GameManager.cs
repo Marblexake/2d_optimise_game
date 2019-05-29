@@ -80,8 +80,8 @@ public class GameManager : MonoBehaviour
         //
         bk1PositionA = new Vector3(background1.transform.position.x - 5, background1.transform.position.y, background1.transform.position.z);
         bk1PositionB = new Vector3(background1.transform.position.x + 5, background1.transform.position.y, background1.transform.position.z);
-        bk2PositionA = new Vector3(background2.transform.position.x - 5, background2.transform.position.y, background1.transform.position.z);
-        bk2PositionB = new Vector3(background1.transform.position.x + 5, background1.transform.position.y, background1.transform.position.z);
+        bk2PositionA = new Vector3(background2.transform.position.x - 5, background2.transform.position.y, background2.transform.position.z);
+        bk2PositionB = new Vector3(background2.transform.position.x + 5, background2.transform.position.y, background2.transform.position.z);
         bk3PositionA = new Vector3(background3.transform.position.x - 5, background3.transform.position.y, background3.transform.position.z);
         bk3PositionB = new Vector3(background3.transform.position.x + 5, background3.transform.position.y, background3.transform.position.z);
 
