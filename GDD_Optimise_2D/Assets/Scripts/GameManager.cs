@@ -57,7 +57,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         //Placing all the images into an array right at the start of the game (Marcus)
-        prefabs = Resources.LoadAll("Prefabs/sprites/animals", typeof(GameObject));
+        prefabs = Resources.LoadAll("Images/animals", typeof(Sprite));
+
         // Find the height and width of the game view in world units
         //
         gameHeight = Camera.main.orthographicSize * 2f;
@@ -173,35 +174,38 @@ public class GameManager : MonoBehaviour
             // Choose a random sprite from the prefabs array.
             //
             int randomIndex = Random.Range(0, prefabs.Length);
-            GameObject sprite = (GameObject)Instantiate(prefabs[randomIndex]);
-            //fruit.GetComponent<SpriteRenderer>().sprite = fruitSprites[9];
+            top.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)prefabs[randomIndex];
 
+
+            //GameObject sprite = (GameObject)Instantiate(prefabs[randomIndex]);
             // Get a reference to the current sprite's transform. This is so that the newly created
             // sprite can be put in the same position before the existing sprite is destroyed.
             //
-            Transform t = top.transform.GetChild(i);
-            Vector3 pos = t.position;
+            //Transform t = top.transform.GetChild(i);
+            //Vector3 pos = t.position;
 
             // Set the new sprite's parent to be top, and then set its position to the position of
             // the current sprite (which will be destroyed in the for loop below).
             //
-            sprite.transform.parent = top.transform;
-            sprite.transform.position = pos;
+            //sprite.transform.parent = top.transform;
+            //sprite.transform.position = pos;
         }
-
+        //***************************************************************************************************************
         // Since we've created a new sprite for every existing sprite, the top parent now has twice
         // as many children as before. The new child sprite gameobjects are placed after the default 
         // sprites that were already there. We must delete the pre-existing default sprites, so we
         // loop across the first half of the children and destroy them. This then leaves only the
         // newly created sprites.
         // 
-        numChildren = top.transform.childCount;
-        for (int i = 0; i < numChildren / 2; i++)
-        {
-            GameObject s = top.transform.GetChild(i).gameObject;
-            Destroy(s);
-        }
-        
+        //numChildren = top.transform.childCount;
+        //for (int i = 0; i < numChildren / 2; i++)
+        //{
+        //    GameObject s = top.transform.GetChild(i).gameObject;
+        //    Destroy(s);
+        //}
+        //*****************************************************************************************************************
+
+
         // Now we replace the default bottom sprites with new sprites
         //
         GameObject bottom = newFrame.gameObject.transform.GetChild(1).gameObject;
