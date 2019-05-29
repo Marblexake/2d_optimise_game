@@ -1017,9 +1017,9 @@ MonoBehaviour:
     type: 3}
   failParticles: {fileID: 198572881580852744, guid: 7e48ba6b1b968764490bbc70b66e3fe1,
     type: 3}
-  background1: {fileID: 1368951564}
-  background2: {fileID: 1046666315}
-  background3: {fileID: 1449890812}
+  mouse: {fileID: 1368951564}
+  rabbit: {fileID: 1046666315}
+  panda: {fileID: 1449890812}
   prefabs: []
 --- !u!4 &819658742
 Transform:

@@ -20,3 +20,9 @@ gotta find another way finding out the distance between the frames.
 
 
 }
+
+
+
+
+
+initial while loop that creates the frames can be better optimised.

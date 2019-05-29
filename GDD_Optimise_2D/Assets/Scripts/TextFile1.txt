@@ -1,4 +1,5 @@
-﻿1.    GameObject mouse, rabbit, panda
+﻿
+1.    GameObject mouse, rabbit, panda
     - One image break down into 3 sprites, use sprite sheet
 
 2.    gameHeight & gameWidth cache together into a game object. 
@@ -14,9 +15,7 @@
 
 7.    Objects[] prefabs = _____ ; Bring it outside the loop and store it into a fixed variable so that it doesn't require constantly be called out.
 
-8)	Line 177 Don't create new object, reuse the same object and change the sprite
-	if we reuse the GameObject, line 188 and 189 is unneccessary
-	198 - 203: Once again unneccesary if we reuse GAmeObject
+8)	Line 177 Don't create new object, reuse the same object and change the sprite if we reuse the GameObject, line 188 and 189 is unneccessary. line198 - 203: Once again unneccesary if we reuse GAmeObject
 
 
 9) Line 213 you should nnever use hardcoded variables, they are only for testing and	  stuff (Refactoring code)
@@ -28,8 +27,7 @@
 11) Never use "Find" in a loop. Line 297 can be removed and replaced somewhere else.
 
 
-12) Loop at line 306, cache the GetComponenets. Cache meaning keeping a reference to them rather than constantly finding them each time we need them. 
-   "New" is creating memory, new is unneccesary here. (New Vector3)
+12) Loop at line 306, cache the GetComponenets. Cache meaning keeping a reference to them rather than constantly finding them each time we need them. "New" is creating memory, new is unneccesary here. (New Vector3)
 
 
 13) GetDistanceToNeighbour all variables can be cached as usual.

@@ -11,10 +11,15 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI timeText;                // Updates every second
     public ParticleSystem successParticles;         // Particle system to run when a match is correct
     public ParticleSystem failParticles;            // Particle system to run when a match is wrong
-    public GameObject background1;                  // Background sprite that oscillates left to right 
-    public GameObject background2;                  // Background sprite that oscillates left to right 
-    public GameObject background3;                  // Background sprite that oscillates left to right 
+    public GameObject mouse;                        // Background sprite that oscillates left to right 
+    public GameObject rabbit;                  // Background sprite that oscillates left to right 
+    public GameObject panda;                  // Background sprite that oscillates left to right 
+    //Changes:
     public Object[] prefabs;                        // This is the array in which all the sprites/prefabs is kept
+    //public Camera mainCam;
+
+    //Changes: Variables for CreateFrame()
+
 
 
     public float gameWidth { get; private set; }    // Width of the game view
@@ -56,9 +61,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        //Placing all the images into an array right at the start of the game (Marcus)
+        // Changes: Placing all the images into an array right at the start of the game
         prefabs = Resources.LoadAll("Images/animals", typeof(Sprite));
 
+        // Changes: Added a camera.main reference so that a reference of it isn't created like previously
+        //mainCam = Camera.main;
         // Find the height and width of the game view in world units
         //
         gameHeight = Camera.main.orthographicSize * 2f;
@@ -78,18 +85,18 @@ public class GameManager : MonoBehaviour
         // Calculate the left and right X axis values for the background sprite oscillations.
         // This is set to be 5 units to the left and right of each sprite's default position.
         //
-        bk1PositionA = new Vector3(background1.transform.position.x - 5, background1.transform.position.y, background1.transform.position.z);
-        bk1PositionB = new Vector3(background1.transform.position.x + 5, background1.transform.position.y, background1.transform.position.z);
-        bk2PositionA = new Vector3(background2.transform.position.x - 5, background2.transform.position.y, background2.transform.position.z);
-        bk2PositionB = new Vector3(background2.transform.position.x + 5, background2.transform.position.y, background2.transform.position.z);
-        bk3PositionA = new Vector3(background3.transform.position.x - 5, background3.transform.position.y, background3.transform.position.z);
-        bk3PositionB = new Vector3(background3.transform.position.x + 5, background3.transform.position.y, background3.transform.position.z);
+        bk1PositionA = new Vector3(mouse.transform.position.x - 5, mouse.transform.position.y, mouse.transform.position.z);
+        bk1PositionB = new Vector3(mouse.transform.position.x + 5, mouse.transform.position.y, mouse.transform.position.z);
+        bk2PositionA = new Vector3(rabbit.transform.position.x - 5, rabbit.transform.position.y, rabbit.transform.position.z);
+        bk2PositionB = new Vector3(rabbit.transform.position.x + 5, rabbit.transform.position.y, rabbit.transform.position.z);
+        bk3PositionA = new Vector3(panda.transform.position.x - 5, panda.transform.position.y, panda.transform.position.z);
+        bk3PositionB = new Vector3(panda.transform.position.x + 5, panda.transform.position.y, panda.transform.position.z);
 
         // Hide the oscillating sprites. These will be switched on and off at regular intervals
         //
-        background1.SetActive(false);
-        background2.SetActive(false);
-        background3.SetActive(false);
+        mouse.SetActive(false);
+        rabbit.SetActive(false);
+        panda.SetActive(false);
 
         frames = new List<GameObject>();
 
@@ -105,7 +112,7 @@ public class GameManager : MonoBehaviour
         //
         int n = 0;
         float currX = leftExtent;
-        while(currX < rightExtent)
+        while (currX < rightExtent)
         {
             Vector3 currPos = new Vector3(currX, 0f, 0f);
             GameObject frame = Instantiate(framePrefab);
@@ -176,40 +183,11 @@ public class GameManager : MonoBehaviour
             int randomIndex = Random.Range(0, prefabs.Length); //Move this out of the loop 
             top.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)prefabs[randomIndex];
 
-
-            //GameObject sprite = (GameObject)Instantiate(prefabs[randomIndex]);
-            // Get a reference to the current sprite's transform. This is so that the newly created
-            // sprite can be put in the same position before the existing sprite is destroyed.
-            //
-            //Transform t = top.transform.GetChild(i);
-            //Vector3 pos = t.position;
-
-            // Set the new sprite's parent to be top, and then set its position to the position of
-            // the current sprite (which will be destroyed in the for loop below).
-            //
-            //sprite.transform.parent = top.transform;
-            //sprite.transform.position = pos;
         }
-        //***************************************************************************************************************
-        // Since we've created a new sprite for every existing sprite, the top parent now has twice
-        // as many children as before. The new child sprite gameobjects are placed after the default 
-        // sprites that were already there. We must delete the pre-existing default sprites, so we
-        // loop across the first half of the children and destroy them. This then leaves only the
-        // newly created sprites.
-        // 
-        //numChildren = top.transform.childCount; == 12
-        //for (int i = 0; i < numChildren / 2; i++)
-        //{
-        //    GameObject s = top.transform.GetChild(i).gameObject;
-        //    Destroy(s);
-        //}
-        //*****************************************************************************************************************
-
 
         // Now we replace the default bottom sprites with new sprites
         //
         GameObject bottom = newFrame.gameObject.transform.GetChild(1).gameObject;
-        numChildren = bottom.transform.childCount; 
 
         // Get a random number between 1 and 10. For integers, the Random.Range function is not
         // inclusive of the max value argument, which is why it is 11.
@@ -226,9 +204,7 @@ public class GameManager : MonoBehaviour
         // Loop over all the bottom sprites
         //
         for (int i = 0; i < numChildren; i++)
-        {
-            GameObject sprite;
-            
+        {            
             // If the frame is set to mirrored, create a copy of the corresponding top sprite. 
             // IMPORTANT! Even though the old default sprites have been "destroyed" in the code
             // above, they won't actually be destroyed until the end of the current frame.
@@ -253,32 +229,9 @@ public class GameManager : MonoBehaviour
                 // sprites.
                 //
                 int randomIndex = Random.Range(0, prefabs.Length);
-                sprite = (GameObject)Instantiate(prefabs[randomIndex]);
+                bottom.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)prefabs[randomIndex];
             }
-
-            //// This is the same as for the top sprites above.
-            ////
-            //Transform t = bottom.transform.GetChild(i);
-            //Vector3 pos = t.position;
-
-            //sprite.transform.parent = bottom.transform;
-            //sprite.transform.position = pos;
-
-            //// Rotate each bottom sprite by 180 degrees to make it a reflection of the corresponding
-            //// top sprite (the same if mirrored, but different if not mirrored)
-            ////
-            //sprite.transform.Rotate(new Vector3(0f, 180f, 180f));
-        }
-
-        // Now, like for the top sprites, destroy all the default pre-existing bottom sprites
-        //
-        //numChildren = bottom.transform.childCount; // ==12
-        //for (int i = 0; i < numChildren / 2; i++)
-        //{
-        //    GameObject s = bottom.transform.GetChild(i).gameObject;
-        //    Destroy(s);
-        //}
-        
+        }      
         // Return the newly created frame back to the calling code
         //
         return newFrame;
@@ -514,9 +467,9 @@ public class GameManager : MonoBehaviour
             backgroundTime = 0;
             showBackgroundCharacters = !showBackgroundCharacters;
 
-            background1.SetActive(showBackgroundCharacters);
-            background2.SetActive(showBackgroundCharacters);
-            background3.SetActive(showBackgroundCharacters);         
+            mouse.SetActive(showBackgroundCharacters);
+            rabbit.SetActive(showBackgroundCharacters);
+            panda.SetActive(showBackgroundCharacters);         
         }
     }
 
@@ -671,9 +624,9 @@ public class GameManager : MonoBehaviour
             // the PingPong function
             //
             float time = Mathf.PingPong(Time.time * 1f, 1);
-            background1.transform.position = Vector3.Lerp(bk1PositionA, bk1PositionB, time);
-            background2.transform.position = Vector3.Lerp(bk2PositionA, bk2PositionB, time);
-            background3.transform.position = Vector3.Lerp(bk3PositionA, bk3PositionB, time);        
+            mouse.transform.position = Vector3.Lerp(bk1PositionA, bk1PositionB, time);
+            rabbit.transform.position = Vector3.Lerp(bk2PositionA, bk2PositionB, time);
+            panda.transform.position = Vector3.Lerp(bk3PositionA, bk3PositionB, time);        
         }
 
         UpdateTime();
