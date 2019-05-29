@@ -173,7 +173,7 @@ public class GameManager : MonoBehaviour
             // Each sprite gameobject in the new frame must be replaced with a new sprite gameobject.
             // Choose a random sprite from the prefabs array.
             //
-            int randomIndex = Random.Range(0, prefabs.Length);
+            int randomIndex = Random.Range(0, prefabs.Length); //Move this out of the loop 
             top.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)prefabs[randomIndex];
 
 
@@ -197,7 +197,7 @@ public class GameManager : MonoBehaviour
         // loop across the first half of the children and destroy them. This then leaves only the
         // newly created sprites.
         // 
-        //numChildren = top.transform.childCount;
+        //numChildren = top.transform.childCount; == 12
         //for (int i = 0; i < numChildren / 2; i++)
         //{
         //    GameObject s = top.transform.GetChild(i).gameObject;
@@ -209,7 +209,7 @@ public class GameManager : MonoBehaviour
         // Now we replace the default bottom sprites with new sprites
         //
         GameObject bottom = newFrame.gameObject.transform.GetChild(1).gameObject;
-        numChildren = bottom.transform.childCount;
+        numChildren = bottom.transform.childCount; 
 
         // Get a random number between 1 and 10. For integers, the Random.Range function is not
         // inclusive of the max value argument, which is why it is 11.
@@ -243,7 +243,9 @@ public class GameManager : MonoBehaviour
             //
             if (mirror)
             {
-                sprite = Instantiate(top.transform.GetChild(i + numChildren).gameObject);
+                //sprite = Instantiate(top.transform.GetChild(i + numChildren).gameObject);
+
+                bottom.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = top.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite;
             }
             else
             {
@@ -254,28 +256,28 @@ public class GameManager : MonoBehaviour
                 sprite = (GameObject)Instantiate(prefabs[randomIndex]);
             }
 
-            // This is the same as for the top sprites above.
-            //
-            Transform t = bottom.transform.GetChild(i);
-            Vector3 pos = t.position;
+            //// This is the same as for the top sprites above.
+            ////
+            //Transform t = bottom.transform.GetChild(i);
+            //Vector3 pos = t.position;
 
-            sprite.transform.parent = bottom.transform;
-            sprite.transform.position = pos;
+            //sprite.transform.parent = bottom.transform;
+            //sprite.transform.position = pos;
 
-            // Rotate each bottom sprite by 180 degrees to make it a reflection of the corresponding
-            // top sprite (the same if mirrored, but different if not mirrored)
-            //
-            sprite.transform.Rotate(new Vector3(0f, 180f, 180f));
+            //// Rotate each bottom sprite by 180 degrees to make it a reflection of the corresponding
+            //// top sprite (the same if mirrored, but different if not mirrored)
+            ////
+            //sprite.transform.Rotate(new Vector3(0f, 180f, 180f));
         }
 
         // Now, like for the top sprites, destroy all the default pre-existing bottom sprites
         //
-        numChildren = bottom.transform.childCount;
-        for (int i = 0; i < numChildren / 2; i++)
-        {
-            GameObject s = bottom.transform.GetChild(i).gameObject;
-            Destroy(s);
-        }
+        //numChildren = bottom.transform.childCount; // ==12
+        //for (int i = 0; i < numChildren / 2; i++)
+        //{
+        //    GameObject s = bottom.transform.GetChild(i).gameObject;
+        //    Destroy(s);
+        //}
         
         // Return the newly created frame back to the calling code
         //
