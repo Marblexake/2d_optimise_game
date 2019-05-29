@@ -14,8 +14,8 @@
         for (int i = 0; i < numChildren; i++)
         {
 			//Need better explanation here
-            int randomIndex = Random.Range(0, prefabs.Length); //Move this out of the loop 
-            top.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)prefabs[randomIndex];
+            int randomIndex = Random.Range(0, sprites.Length); //Move this out of the loop 
+            top.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)sprites[randomIndex];
 
         }
 
@@ -43,8 +43,8 @@
                 // The frame is not mirrored, so the bottom sprites must be different from the top
                 // sprites.
                 //
-                int randomIndex = Random.Range(0, prefabs.Length);
-                bottom.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)prefabs[randomIndex];
+                int randomIndex = Random.Range(0, sprites.Length);
+                bottom.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)sprites[randomIndex];
             }
         }      
         // Return the newly created frame back to the calling code

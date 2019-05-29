@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour
     private AudioClip clipCorrect;                  // AudioClip for the CORRECT sound
     private AudioClip clipWrong;                    // AudioClip for the WRONG sound
 
+    private GameObject hitFrame;
+    private Vector3 mousePos;
+
     //***********************************************************************************************************************
 
 
@@ -493,7 +496,10 @@ public class GameManager : MonoBehaviour
 
             // Check if the player has selected any of the frames
             //
-            GameObject hitFrame = CheckHitFrame();
+            hitFrame = CheckHitFrame();
+
+            // Changes
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             // If a frame has been selected, check if it is mirrored or not (check if all the bottom
             // sprites match their corresponding top sprites). Process the frames accordingly.
@@ -561,7 +567,7 @@ public class GameManager : MonoBehaviour
                     //
                     ParticleSystem ps = Instantiate(successParticles);
                     ps.transform.localScale = new Vector3(10, 10, 1);
-                    Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     ps.transform.position = mousePos;
 
                     // Play a success sound
@@ -579,7 +585,7 @@ public class GameManager : MonoBehaviour
 
                     ParticleSystem ps = Instantiate(failParticles);
                     ps.transform.localScale = new Vector3(15, 15, 1);
-                    Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     ps.transform.position = mousePos;
 
                     // Play a fail sound
@@ -594,11 +600,11 @@ public class GameManager : MonoBehaviour
             float time = Mathf.PingPong(Time.time * 1f, 1);
             mouse.transform.position = Vector3.Lerp(bk1PositionA, bk1PositionB, time);
             rabbit.transform.position = Vector3.Lerp(bk2PositionA, bk2PositionB, time);
-            panda.transform.position = Vector3.Lerp(bk3PositionA, bk3PositionB, time);        
-        }
+            panda.transform.position = Vector3.Lerp(bk3PositionA, bk3PositionB, time);
 
-        UpdateTime();
-        ShowBackgroundCharacters();
+            UpdateTime();
+            ShowBackgroundCharacters();
+        }
 
     }
 

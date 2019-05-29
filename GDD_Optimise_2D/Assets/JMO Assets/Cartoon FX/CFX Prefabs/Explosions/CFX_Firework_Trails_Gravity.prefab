@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4782282035096714}
   - component: {fileID: 198405478074982118}
   - component: {fileID: 199773197783368204}
+  - component: {fileID: 7521325204288207754}
   m_Layer: 0
   m_Name: CFX_Firework_Trails_Gravity
   m_TagString: Untagged
@@ -4477,3 +4478,15 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &7521325204288207754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247311384876784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 126a94af52ca17a47877b619faad7fb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

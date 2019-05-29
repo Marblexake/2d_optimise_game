@@ -165,16 +165,16 @@ public class backup : MonoBehaviour
         //
         for (int i = 0; i < numChildren; i++)
         {
-            // Load and store all the sprite prefabs in an array. The Resources.LoadAll() function
+            // Load and store all the sprite sprites in an array. The Resources.LoadAll() function
             // return an array of Objects.
             //
-            Object[] prefabs = Resources.LoadAll("Prefabs/Sprites/animals", typeof(GameObject));
+            Object[] sprites = Resources.LoadAll("sprites/Sprites/animals", typeof(GameObject));
 
             // Each sprite gameobject in the new frame must be replaced with a new sprite gameobject.
-            // Choose a random sprite from the prefabs array.
+            // Choose a random sprite from the sprites array.
             //
-            int randomIndex = Random.Range(0, prefabs.Length);
-            GameObject sprite = (GameObject)Instantiate(prefabs[randomIndex]);
+            int randomIndex = Random.Range(0, sprites.Length);
+            GameObject sprite = (GameObject)Instantiate(sprites[randomIndex]);
 
             // Get a reference to the current sprite's transform. This is so that the newly created
             // sprite can be put in the same position before the existing sprite is destroyed.
@@ -244,12 +244,12 @@ public class backup : MonoBehaviour
             else
             {
                 // The frame is not mirrored, so the bottom sprites must be different from the top
-                // sprites. Just get a reference to all the prefabs in an array, then select one at
+                // sprites. Just get a reference to all the sprites in an array, then select one at
                 // random.
                 //
-                Object[] prefabs = Resources.LoadAll("Prefabs/Sprites/animals", typeof(GameObject));
-                int randomIndex = Random.Range(0, prefabs.Length);
-                sprite = (GameObject)Instantiate(prefabs[randomIndex]);
+                Object[] sprites = Resources.LoadAll("sprites/Sprites/animals", typeof(GameObject));
+                int randomIndex = Random.Range(0, sprites.Length);
+                sprite = (GameObject)Instantiate(sprites[randomIndex]);
             }
 
             // This is the same as for the top sprites above.
