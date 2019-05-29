@@ -357,8 +357,6 @@ public class GameManager : MonoBehaviour
                 float newX = endFrame.transform.position.x + frameWidth;
 
                 float gap = frameWidth * 0.1f;
-                //GameObject newFrame = CreateFrame(); need to "update" or randomise the newly swapped frame.
-                //newFrame.name = frame.name;
 
                 // Set the new frame's position so that it is at the end of the row of 
                 // frames, with a gap between the new frame and the current end frame
