@@ -12,11 +12,22 @@ public class GameManager : MonoBehaviour
     public ParticleSystem successParticles;         // Particle system to run when a match is correct
     public ParticleSystem failParticles;            // Particle system to run when a match is wrong
     public GameObject mouse;                        // Background sprite that oscillates left to right 
-    public GameObject rabbit;                  // Background sprite that oscillates left to right 
-    public GameObject panda;                  // Background sprite that oscillates left to right 
-    //Changes:
-    public Object[] prefabs;                        // This is the array in which all the sprites/prefabs is kept
-    //public Camera mainCam;
+    public GameObject rabbit;                       // Background sprite that oscillates left to right 
+    public GameObject panda;                        // Background sprite that oscillates left to right 
+    
+    //***********************************************************************************************************************
+    // Changes:
+    public Object[] sprites;                        // This is the array in which all the sprites/ is kept
+    //private Camera mainCam;
+
+    // PlaySound() variables;
+    private AudioSource audioSource;                // AudioSource Component that will be added to the GameObject on Start()
+    private AudioClip clipToBePlayed;               // Clip that will be played 
+    private AudioClip clipCorrect;                  // AudioClip for the CORRECT sound
+    private AudioClip clipWrong;                    // AudioClip for the WRONG sound
+
+    //***********************************************************************************************************************
+
 
     public float gameWidth { get; private set; }    // Width of the game view
     public float gameHeight { get; private set; }   // Height of the game view
@@ -58,7 +69,16 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // Changes: Placing all the images into an array right at the start of the game
-        prefabs = Resources.LoadAll("Images/animals", typeof(Sprite));
+        sprites = Resources.LoadAll("Images/animals", typeof(Sprite));
+
+        // Changes: The audio source will now be added to the GameObject GameManager at the start instead of each and every time a
+        //          sound is played.
+        audioSource = gameObject.AddComponent<AudioSource>();
+
+        clipCorrect = (AudioClip)Resources.Load("Audio/CORRECT");
+        clipWrong = (AudioClip)Resources.Load("Audio/WRONG");
+
+
 
         // Changes: Added a camera.main reference so that a reference of it isn't created like previously
         //mainCam = Camera.main;
@@ -174,10 +194,10 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < numChildren; i++)
         {
             // Each sprite gameobject in the new frame must be replaced with a new sprite gameobject.
-            // Choose a random sprite from the prefabs array.
+            // Choose a random sprite from the sprites array.
             //
-            int randomIndex = Random.Range(0, prefabs.Length); //Move this out of the loop 
-            top.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)prefabs[randomIndex];
+            int randomIndex = Random.Range(0, sprites.Length); //Move this out of the loop 
+            top.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)sprites[randomIndex];
 
         }
 
@@ -224,8 +244,8 @@ public class GameManager : MonoBehaviour
                 // The frame is not mirrored, so the bottom sprites must be different from the top
                 // sprites.
                 //
-                int randomIndex = Random.Range(0, prefabs.Length);
-                bottom.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)prefabs[randomIndex];
+                int randomIndex = Random.Range(0, sprites.Length);
+                bottom.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)sprites[randomIndex];
             }
         }      
         // Return the newly created frame back to the calling code
@@ -438,28 +458,21 @@ public class GameManager : MonoBehaviour
     //
     private void PlaySound(bool matched)
     {
-        AudioClip clip;
-
         if (matched)
         {
             // Load the CORRECT.wav file
             //
-            clip = (AudioClip)Resources.Load("Audio/CORRECT");
+            clipToBePlayed = clipCorrect;
         }
         else
         {
             // Load the WRONG.wav file
             //
-            clip = (AudioClip)Resources.Load("Audio/WRONG");
+            clipToBePlayed = clipWrong;
         }
-        
-        // The sound must be played by an AudioSource, so add this to the GameManager object
-        //
-        AudioSource audio = gameObject.AddComponent<AudioSource>();
-
         // Play the sound
         //
-        audio.PlayOneShot(clip);
+        audioSource.PlayOneShot(clipToBePlayed);
     }
 
     private void Update()
