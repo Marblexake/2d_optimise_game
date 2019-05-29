@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
     float counterTime = 0;                  // Used for the Seconds UI display
     float backgroundTime = 0;               // Used for the background sprites oscillation
 
-    GameObject mouse, rabbit, panda;        // The oscillating background sprites
+    //GameObject mouse, rabbit, panda;        // The oscillating background sprites
     bool showBackgroundCharacters = false;  // The background sprites are shown intermittently, i.e. on/off
 
     // When a new frame is created, it must be placed behind the rightmost, or end, frame. endFrame
@@ -71,25 +71,25 @@ public class GameManager : MonoBehaviour
 
         // Get a reference to each background sprite for oscillation
         //
-        mouse = GameObject.Find("MouseBackground");
-        rabbit = GameObject.Find("RabbitBackground");
-        panda = GameObject.Find("PandaBackground");
+        //mouse = GameObject.Find("MouseBackground");
+        //rabbit = GameObject.Find("RabbitBackground");
+        //panda = GameObject.Find("PandaBackground");
 
         // Calculate the left and right X axis values for the background sprite oscillations.
         // This is set to be 5 units to the left and right of each sprite's default position.
         //
-        bk1PositionA = new Vector3(mouse.transform.position.x - 5, mouse.transform.position.y, mouse.transform.position.z);
-        bk1PositionB = new Vector3(mouse.transform.position.x + 5, mouse.transform.position.y, mouse.transform.position.z);
-        bk2PositionA = new Vector3(rabbit.transform.position.x - 5, rabbit.transform.position.y, rabbit.transform.position.z);
-        bk2PositionB = new Vector3(rabbit.transform.position.x + 5, rabbit.transform.position.y, rabbit.transform.position.z);
-        bk3PositionA = new Vector3(panda.transform.position.x - 5, panda.transform.position.y, panda.transform.position.z);
-        bk3PositionB = new Vector3(panda.transform.position.x + 5, panda.transform.position.y, panda.transform.position.z);
+        bk1PositionA = new Vector3(background1.transform.position.x - 5, background1.transform.position.y, background1.transform.position.z);
+        bk1PositionB = new Vector3(background1.transform.position.x + 5, background1.transform.position.y, background1.transform.position.z);
+        bk2PositionA = new Vector3(background2.transform.position.x - 5, background2.transform.position.y, background1.transform.position.z);
+        bk2PositionB = new Vector3(background1.transform.position.x + 5, background1.transform.position.y, background1.transform.position.z);
+        bk3PositionA = new Vector3(background3.transform.position.x - 5, background3.transform.position.y, background3.transform.position.z);
+        bk3PositionB = new Vector3(background3.transform.position.x + 5, background3.transform.position.y, background3.transform.position.z);
 
         // Hide the oscillating sprites. These will be switched on and off at regular intervals
         //
-        mouse.SetActive(false);
-        rabbit.SetActive(false);
-        panda.SetActive(false);
+        background1.SetActive(false);
+        background2.SetActive(false);
+        background3.SetActive(false);
 
         frames = new List<GameObject>();
 
@@ -514,9 +514,9 @@ public class GameManager : MonoBehaviour
             backgroundTime = 0;
             showBackgroundCharacters = !showBackgroundCharacters;
 
-            mouse.SetActive(showBackgroundCharacters);
-            rabbit.SetActive(showBackgroundCharacters);
-            panda.SetActive(showBackgroundCharacters);         
+            background1.SetActive(showBackgroundCharacters);
+            background2.SetActive(showBackgroundCharacters);
+            background3.SetActive(showBackgroundCharacters);         
         }
     }
 
