@@ -18,10 +18,6 @@ public class GameManager : MonoBehaviour
     public Object[] prefabs;                        // This is the array in which all the sprites/prefabs is kept
     //public Camera mainCam;
 
-    //Changes: Variables for CreateFrame()
-
-
-
     public float gameWidth { get; private set; }    // Width of the game view
     public float gameHeight { get; private set; }   // Height of the game view
 
@@ -73,8 +69,8 @@ public class GameManager : MonoBehaviour
 
         // Calculate the X axis values for frame removal and the positioning of new frames
         //
-        leftExtent = -gameWidth*2f;
-        rightExtent = gameWidth*2f;
+        leftExtent = -gameWidth*1.3f;
+        rightExtent = gameWidth*1.3f;
 
         // Get a reference to each background sprite for oscillation
         //
@@ -115,7 +111,7 @@ public class GameManager : MonoBehaviour
         while (currX < rightExtent)
         {
             Vector3 currPos = new Vector3(currX, 0f, 0f);
-            GameObject frame = Instantiate(framePrefab);
+            GameObject frame = CreateFrame();
             frame.name = "Frame_" + n++;
 
             frame.transform.position = currPos;
@@ -537,7 +533,6 @@ public class GameManager : MonoBehaviour
                     //
                     float newX = endFrame.transform.position.x + frameWidth;
                     float gap = frameWidth * 0.1f;
-                    //CreateFrame(hitframe);
                     GameObject newFrame = CreateFrame();
                     newFrame.name = frameToDelete.name;
                     newFrame.transform.position = new Vector3(newX + gap, 0f, 0f);
