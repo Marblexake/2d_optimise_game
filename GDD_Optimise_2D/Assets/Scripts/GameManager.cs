@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour
         // Changes: The audio source will now be added to the GameObject GameManager at the start instead of each and every time a
         //          sound is played.
         audioSource = gameObject.AddComponent<AudioSource>();
-
+        // Changes: Loaded the clips once in Start()
         clipCorrect = (AudioClip)Resources.Load("Audio/CORRECT");
         clipWrong = (AudioClip)Resources.Load("Audio/WRONG");
 
