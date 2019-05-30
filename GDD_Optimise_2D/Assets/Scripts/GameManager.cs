@@ -26,7 +26,22 @@ public class GameManager : MonoBehaviour
     private float time;                             // Reference for background sprites function in Update()
     private float gap;                              // The gap between the frames
     private float newX;                             // X position for new Frames
-    private GameObject newFrame;
+    private GameObject newFrame;                    // Reference to the new frame
+
+    private float numChildren;                      // The number of children in the top and bottom of frame 
+                                                    //(which through extensive testing is always 6)
+
+    // For hitframe checks in Update()
+    private Transform hitFrameTop;
+    private Transform hitFrameBottom;
+    private string topSpriteName;
+    private string bottomSpriteName;
+
+    private bool matched;
+
+    // MoveFrames() variables
+    private Vector3 speedUp;
+    private Vector3 normalSpeed;
 
     // Raycasting related variables
     private Vector3 raypos;
@@ -94,6 +109,10 @@ public class GameManager : MonoBehaviour
         // Changes: Placing all the images into an array right at the start of the game
         sprites = Resources.LoadAll("Images/animals", typeof(Sprite));
 
+        // Changes: MoveFrames() variables
+        speedUp = new Vector3(speed * 10f, 0f, 0f);
+        normalSpeed = new Vector3(speed, 0f, 0f);
+
         // Changes: The audio source will now be added to the GameObject GameManager at the start instead of each and every time a
         //          sound is played.
         audioSource = gameObject.AddComponent<AudioSource>();
@@ -101,6 +120,9 @@ public class GameManager : MonoBehaviour
         // Changes: Loaded the clips once in Start()
         clipCorrect = (AudioClip)Resources.Load("Audio/CORRECT");
         clipWrong = (AudioClip)Resources.Load("Audio/WRONG");
+
+        // Changes: Added this since all numChildren in the script return the same value as all frames have the same structure
+        numChildren = framePrefab.transform.GetChild(0).childCount;
 
         // Changes: Added a camera.main reference so that a reference of it isn't created like previously
         mainCam = Camera.main;
@@ -205,11 +227,6 @@ public class GameManager : MonoBehaviour
         //
         GameObject top = newFrame.gameObject.transform.GetChild(0).gameObject;
 
-        // Get the number of children of top. This is the number of sprites for the top part
-        // of the frame. 
-        //
-        int numChildren = top.transform.childCount; //Always returns 6, maybe it can be called in awake instead?
-
         // Loop across all the top children in the new frame
         //
         for (int i = 0; i < numChildren; i++)
@@ -222,7 +239,6 @@ public class GameManager : MonoBehaviour
             // Changes: This gets the top category's child(i).gameObject and gets the Sprite Renderer component and changes the sprite to
             // a random one in the Resource array.
             top.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)sprites[randomIndex];
-
         }
 
         // Now we replace the default bottom sprites with new sprites
@@ -297,11 +313,11 @@ public class GameManager : MonoBehaviour
 
             if (distanceToNeighbour > frameWidth * 0.5f)
             {
-                frame.GetComponent<Rigidbody>().velocity = new Vector3(speed * 10f, 0f, 0f);
+                frame.GetComponent<Rigidbody>().velocity = speedUp;
             }
             else
             {
-                frame.GetComponent<Rigidbody>().velocity = new Vector3(speed, 0f, 0f);
+                frame.GetComponent<Rigidbody>().velocity = normalSpeed;
             }
         }
 
@@ -520,23 +536,23 @@ public class GameManager : MonoBehaviour
             //
             if (hitFrame)
             {
-                bool matched = true;
-                int numChildren = hitFrame.transform.GetChild(0).transform.childCount;
+                matched = true;
+
+                // Changes: Added References to the hitframe childs outside the loop
+                hitFrameTop = hitFrame.transform.GetChild(0);
+                hitFrameBottom = hitFrame.transform.GetChild(1);
                 for (int i = 0; i < numChildren; i++)
                 {
                     // Get each top sprite (s1) and its corresponding bottom sprite (s2)
                     //
-                    GameObject s1 = hitFrame.transform.GetChild(0).transform.GetChild(i).gameObject;
-                    GameObject s2 = hitFrame.transform.GetChild(1).transform.GetChild(i).gameObject;
-
                     // Get the name of each sprite
                     //
-                    string s1Name = s1.GetComponent<SpriteRenderer>().sprite.name;
-                    string s2Name = s2.GetComponent<SpriteRenderer>().sprite.name;
+                    topSpriteName = hitFrameTop.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite.name;
+                    bottomSpriteName = hitFrameBottom.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite.name;
 
                     // If the names are not the same, then the frame is not mirrored
                     //
-                    if(s1Name != s2Name)
+                    if(topSpriteName != bottomSpriteName)
                     {
                         matched = false;
                     }
