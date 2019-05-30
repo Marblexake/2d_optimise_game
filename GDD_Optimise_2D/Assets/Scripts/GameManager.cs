@@ -15,14 +15,23 @@ public class GameManager : MonoBehaviour
     public GameObject rabbit;                       // Background sprite that oscillates left to right 
     public GameObject panda;                        // Background sprite that oscillates left to right 
     
+    // This is where I place all the variables I have changed/declared outside their functions.
     //***********************************************************************************************************************
     // Changes:
     public Object[] sprites;                        // This is the array in which all the sprites/ is kept
-    //private Camera mainCam;
+    private int randomIndex;                        // This is the random value that chooses which sprite in the array to use
+    private int rand;                               // This is the value that determines whether the frames are matched or not matched.
+    private Camera mainCam;                         // Reference to Camera.main
+    private Vector3 mousePos;                       // Reference to current mousePos in the Game view
+    private float time;                             // Reference for background sprites function in Update()
+    private float gap;                              // The gap between the frames
+    private float newX;                             // X position for new Frames
+    private GameObject newFrame;
+
+    // Raycasting related variables
     private Vector3 raypos;
     private RaycastHit hit;
     private GameObject hitFrame;
-    private Vector3 mousePos;
 
     // PlaySound() variables;
     private AudioSource audioSource;                // AudioSource Component that will be added to the GameObject on Start()
@@ -34,11 +43,12 @@ public class GameManager : MonoBehaviour
     private GameObject checkHitFrame;
 
     // GetDistanceToNeighbours
-    private Vector3 currentFramePos;
-    private bool leftFrame;
+    private Vector3 currentFramePos;                // Reference to current iterated frame position
+    private bool leftFrame;                         // Reference to the left most frame
+    private float distanceToNeighbour;              // Renamed the variable for easier identification, also used in MoveFrames()
 
-    //CheckRespawnFrames()
-    private GameObject frame;
+    //CheckRespawnFrames(), Start() in while loop
+    private GameObject frame;                       // 
     //***********************************************************************************************************************
 
 
@@ -87,29 +97,25 @@ public class GameManager : MonoBehaviour
         // Changes: The audio source will now be added to the GameObject GameManager at the start instead of each and every time a
         //          sound is played.
         audioSource = gameObject.AddComponent<AudioSource>();
+
         // Changes: Loaded the clips once in Start()
         clipCorrect = (AudioClip)Resources.Load("Audio/CORRECT");
         clipWrong = (AudioClip)Resources.Load("Audio/WRONG");
 
-
-
         // Changes: Added a camera.main reference so that a reference of it isn't created like previously
-        //mainCam = Camera.main;
+        mainCam = Camera.main;
+
+
         // Find the height and width of the game view in world units
         //
-        gameHeight = Camera.main.orthographicSize * 2f;
-        gameWidth = Camera.main.aspect * gameHeight;
+        gameHeight = mainCam.orthographicSize * 2f;
+        gameWidth = mainCam.aspect * gameHeight;
 
         // Calculate the X axis values for frame removal and the positioning of new frames
-        //
-        leftExtent = -gameWidth*1.3f;
-        rightExtent = gameWidth*1.3f;
-
-        // Get a reference to each background sprite for oscillation
-        //
-        //mouse = GameObject.Find("MouseBackground");
-        //rabbit = GameObject.Find("RabbitBackground");
-        //panda = GameObject.Find("PandaBackground");
+        // Changes: I reduced the "true" gamewidth aka the size of the area where the sprites spawn so that it doesn't have unneccessary 
+        // frames that the player don't actually see.
+        leftExtent = -gameWidth*1f;
+        rightExtent = gameWidth*1f;
 
         // Calculate the left and right X axis values for the background sprite oscillations.
         // This is set to be 5 units to the left and right of each sprite's default position.
@@ -141,12 +147,12 @@ public class GameManager : MonoBehaviour
         //
         int n = 0;
         float currX = leftExtent;
-        //frameWidth = frame.GetComponent<BoxCollider>().bounds.size.x;
-
         while (currX < rightExtent)
         {
             Vector3 currPos = new Vector3(currX, 0f, 0f);
-            GameObject frame = CreateFrame();
+            // Changes: Instead of creating a blank frame, I made the game already generate "random frames", to take away one
+            // step from the process of "making the game at the start"
+            frame = CreateFrame();
             frame.name = "Frame_" + n++;
 
             frame.transform.position = currPos;
@@ -156,13 +162,13 @@ public class GameManager : MonoBehaviour
             frameWidth = frame.GetComponent<BoxCollider>().bounds.size.x;
 
             // The gap between one frame and the next: |     |<-gap->|     |
-            float gap = frameWidth * 0.1f;
+            gap = frameWidth * 0.1f;
 
             currX += frameWidth + gap;
             framesList.Add(frame);
         }
         endFrame = framesList[framesList.Count-1];  // endFrame is the last frame added to the list
-        initialised = true;                 // Set to true so that the game can start
+        initialised = true;                         // Set to true so that the game can start
     }
 
     // Creates a new frame. This is done when all the initial frames are created before the
@@ -182,7 +188,7 @@ public class GameManager : MonoBehaviour
         //
         // HINT: What problem is being solved here, and is this a good way to solve it?
         //
-        GameObject newFrame = Instantiate(framePrefab);
+        newFrame = Instantiate(framePrefab);
 
         // Each frame has a set of top and bottom sprites. All the top and bottom sprites must 
         // match to score a point. The top and bottom sprites are children of a top or a
@@ -211,7 +217,10 @@ public class GameManager : MonoBehaviour
             // Each sprite gameobject in the new frame must be replaced with a new sprite gameobject.
             // Choose a random sprite from the sprites array.
             //
-            int randomIndex = Random.Range(0, sprites.Length); //Move this out of the loop 
+            randomIndex = Random.Range(0, sprites.Length); //Move this out of the loop 
+
+            // Changes: This gets the top category's child(i).gameObject and gets the Sprite Renderer component and changes the sprite to
+            // a random one in the Resource array.
             top.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)sprites[randomIndex];
 
         }
@@ -259,7 +268,7 @@ public class GameManager : MonoBehaviour
                 // The frame is not mirrored, so the bottom sprites must be different from the top
                 // sprites.
                 //
-                int randomIndex = Random.Range(0, sprites.Length);
+                randomIndex = Random.Range(0, sprites.Length);
                 bottom.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)sprites[randomIndex];
             }
         }      
@@ -284,9 +293,9 @@ public class GameManager : MonoBehaviour
             // for each frame, find the distance to the frame on its left. If the distance is
             // greater than half a framewidth, increase the frame's animation speed.
             //
-            float distance = GetDistanceToNeighbour(frame);
+            distanceToNeighbour = GetDistanceToNeighbour(frame);
 
-            if (distance > frameWidth * 0.5f)
+            if (distanceToNeighbour > frameWidth * 0.5f)
             {
                 frame.GetComponent<Rigidbody>().velocity = new Vector3(speed * 10f, 0f, 0f);
             }
@@ -308,7 +317,7 @@ public class GameManager : MonoBehaviour
     //
     float GetDistanceToNeighbour(GameObject frame)
     {
-        float distance = 0f;
+        distanceToNeighbour = 0f;
 
         // Set up the ray parameters
         //
@@ -325,7 +334,7 @@ public class GameManager : MonoBehaviour
             {
                 if (hit.collider.gameObject.name.StartsWith("Frame"))
                 {
-                    distance = hit.distance;
+                    distanceToNeighbour = hit.distance;
                 }
             }
         }
@@ -349,11 +358,11 @@ public class GameManager : MonoBehaviour
             }
             if (leftFrame == true && frame.gameObject.transform.position.x > -gameWidth/2f)
             {
-                distance = gameWidth * 2f; ;
+                distanceToNeighbour = gameWidth * 2f; ;
             }
         }
 
-        return distance;
+        return distanceToNeighbour;
     }
 
     // Check if a frame needs to be destroyed and a new one spawned to take its place. 
@@ -381,9 +390,9 @@ public class GameManager : MonoBehaviour
             {
                 // Set the X position for the new frame that wil be created
                 //
-                float newX = endFrame.transform.position.x + frameWidth;
+                newX = endFrame.transform.position.x + frameWidth;
 
-                float gap = frameWidth * 0.1f;
+                gap = frameWidth * 0.1f;
 
                 // Set the new frame's position so that it is at the end of the row of 
                 // frames, with a gap between the new frame and the current end frame
@@ -396,6 +405,9 @@ public class GameManager : MonoBehaviour
                 endFrame = frame;
 
                 // Changes: Removed some old code as they are not needed anymore since object pooling is implemented here.
+                // It used to be that a new frame was created here, and then the new frame was the endframe, and the old frame was removed
+                // from the list and destroyed and the newFrame was added to the list. Now i simply set the current iterated frame x value to 
+                // the current endFrame and then set the current iterated frame as the new endFrame.
             }
         }
     }
@@ -412,7 +424,7 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            raypos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            raypos = mainCam.ScreenToWorldPoint(Input.mousePosition);
 
             if (Physics.Raycast(raypos, Vector3.forward, out hit, Mathf.Infinity))
             {
@@ -471,17 +483,17 @@ public class GameManager : MonoBehaviour
         if (matched)
         {
             // Load the CORRECT.wav file
-            //
+            // Changes: Declared the variable globally, and loaded the audioClip once in start.
             clipToBePlayed = clipCorrect;
         }
         else
         {
             // Load the WRONG.wav file
-            //
+            // Changes: Declared the variable globally, and loaded the audioClip once in start.
             clipToBePlayed = clipWrong;
         }
         // Play the sound
-        //
+        // Changes: Added the audioSource component to the GameObject in Start(), essentially "caching" it.
         audioSource.PlayOneShot(clipToBePlayed);
     }
 
@@ -491,15 +503,13 @@ public class GameManager : MonoBehaviour
         //
         if(initialised)
         {
+            // Changes: Removed the RotateSprites() function as now it is under a new Script, SpriteManager.
+
             // Animate the frames to the left
             //
             MoveFrames();
 
-            // Once the frames have animated to the left, check if any need to be respawned.
-            // Frame destroying and removal won't happen until the end of the current frame
-            // (game frame, not gameobject frame)
-            //
-            CheckRespawnFrames();
+            // Changes: Removed CheckRespawnFrames() as it is already called in MoveFrames() every frame anyway;
 
             // Check if the player has selected any of the frames
             //
@@ -553,9 +563,9 @@ public class GameManager : MonoBehaviour
                     // Create the new frame that will replace frameToDelete. This is much the same
                     // as in the CheckRespawnFrames function, so it is guaranteed to work.
                     //
-                    float newX = endFrame.transform.position.x + frameWidth;
-                    float gap = frameWidth * 0.1f;
-                    GameObject newFrame = CreateFrame();
+                    newX = endFrame.transform.position.x + frameWidth;
+                    gap = frameWidth * 0.1f;
+                    newFrame = CreateFrame();
                     newFrame.name = frameToDelete.name;
                     newFrame.transform.position = new Vector3(newX + gap, 0f, 0f);
 
@@ -570,7 +580,7 @@ public class GameManager : MonoBehaviour
                     //
                     ParticleSystem ps = Instantiate(successParticles);
                     ps.transform.localScale = new Vector3(10, 10, 1);
-                    mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
                     ps.transform.position = mousePos;
 
                     // Play a success sound
@@ -588,7 +598,7 @@ public class GameManager : MonoBehaviour
 
                     ParticleSystem ps = Instantiate(failParticles);
                     ps.transform.localScale = new Vector3(15, 15, 1);
-                    mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
                     ps.transform.position = mousePos;
 
                     // Play a fail sound
@@ -600,7 +610,7 @@ public class GameManager : MonoBehaviour
             // Update the positions of the oscillating background sprites. This is done using
             // the PingPong function
             //
-            float time = Mathf.PingPong(Time.time * 1f, 1);
+            time = Mathf.PingPong(Time.time * 1f, 1);
             mouse.transform.position = Vector3.Lerp(bk1PositionA, bk1PositionB, time);
             rabbit.transform.position = Vector3.Lerp(bk2PositionA, bk2PositionB, time);
             panda.transform.position = Vector3.Lerp(bk3PositionA, bk3PositionB, time);
