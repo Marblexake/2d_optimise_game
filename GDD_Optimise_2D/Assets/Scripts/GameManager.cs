@@ -19,6 +19,10 @@ public class GameManager : MonoBehaviour
     // Changes:
     public Object[] sprites;                        // This is the array in which all the sprites/ is kept
     //private Camera mainCam;
+    private Vector3 raypos;
+    private RaycastHit hit;
+    private GameObject hitFrame;
+    private Vector3 mousePos;
 
     // PlaySound() variables;
     private AudioSource audioSource;                // AudioSource Component that will be added to the GameObject on Start()
@@ -26,9 +30,14 @@ public class GameManager : MonoBehaviour
     private AudioClip clipCorrect;                  // AudioClip for the CORRECT sound
     private AudioClip clipWrong;                    // AudioClip for the WRONG sound
 
-    private GameObject hitFrame;
-    private Vector3 mousePos;
+    // CheckHitFrame() variables
+    private GameObject checkHitFrame;
 
+    // GetDistanceToNeighbours
+    private Vector3 currentFramePos;
+
+    //CheckRespawnFrames()
+    private GameObject frame;
     //***********************************************************************************************************************
 
 
@@ -299,14 +308,13 @@ public class GameManager : MonoBehaviour
         // Get the width of the frame
         //
         float frameWidth = frame.gameObject.GetComponent<BoxCollider>().bounds.size.x;
-
         float distance = 0f;
 
         // Set up the ray parameters
         //
-        Vector3 pos = frame.gameObject.transform.position;
-        Vector3 raypos = new Vector3(pos.x - frameWidth, 0f, pos.z);
-        RaycastHit hit;
+        currentFramePos = frame.gameObject.transform.position;
+        raypos = new Vector3(currentFramePos.x - frameWidth, 0f, currentFramePos.z);
+        
 
         // Cast the ray. Check for a collision, then check if the collided object's name 
         // starts with "Frame". If so, them set distance to the hit distance.
@@ -358,7 +366,7 @@ public class GameManager : MonoBehaviour
     //
     private void CheckRespawnFrames()
     {
-        GameObject frame = null;
+        frame = null;
 
         // Loop backwards over the frames list
         //
@@ -400,22 +408,21 @@ public class GameManager : MonoBehaviour
     //
     private GameObject CheckHitFrame()
     {
-        GameObject frame = null;
+        checkHitFrame = null;
 
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3 raypos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit hit;
+            raypos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             if (Physics.Raycast(raypos, Vector3.forward, out hit, Mathf.Infinity))
             {
                 if (hit.collider != null)
                 {
-                    frame = hit.collider.gameObject; //returns the frame hit
+                    checkHitFrame = hit.collider.gameObject; //returns the frame hit
                 }
             }
         }
-        return frame;
+        return checkHitFrame;
     }
 
     // Update the Seconds text in the UI
@@ -498,9 +505,6 @@ public class GameManager : MonoBehaviour
             //
             hitFrame = CheckHitFrame();
 
-            // Changes
-            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
             // If a frame has been selected, check if it is mirrored or not (check if all the bottom
             // sprites match their corresponding top sprites). Process the frames accordingly.
             //
@@ -567,7 +571,7 @@ public class GameManager : MonoBehaviour
                     //
                     ParticleSystem ps = Instantiate(successParticles);
                     ps.transform.localScale = new Vector3(10, 10, 1);
-                    //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     ps.transform.position = mousePos;
 
                     // Play a success sound
@@ -585,7 +589,7 @@ public class GameManager : MonoBehaviour
 
                     ParticleSystem ps = Instantiate(failParticles);
                     ps.transform.localScale = new Vector3(15, 15, 1);
-                    //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     ps.transform.position = mousePos;
 
                     // Play a fail sound
