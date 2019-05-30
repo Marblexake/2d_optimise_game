@@ -289,7 +289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -790,6 +790,10 @@ PrefabInstance:
       propertyPath: m_FontData.m_MinSize
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 11497642, guid: 2e936b2baa9334ecaac06a261c66b624, type: 3}
+      propertyPath: m_FontData.m_RichText
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 11475992, guid: 2e936b2baa9334ecaac06a261c66b624, type: 3}
       propertyPath: m_FontData.m_FontSize
       value: 34
@@ -798,6 +802,10 @@ PrefabInstance:
       propertyPath: m_FontData.m_MinSize
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 11475992, guid: 2e936b2baa9334ecaac06a261c66b624, type: 3}
+      propertyPath: m_FontData.m_RichText
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 11441046, guid: 2e936b2baa9334ecaac06a261c66b624, type: 3}
       propertyPath: m_FontData.m_FontSize
       value: 34
@@ -805,6 +813,10 @@ PrefabInstance:
     - target: {fileID: 11441046, guid: 2e936b2baa9334ecaac06a261c66b624, type: 3}
       propertyPath: m_FontData.m_MinSize
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11441046, guid: 2e936b2baa9334ecaac06a261c66b624, type: 3}
+      propertyPath: m_FontData.m_RichText
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22474228, guid: 2e936b2baa9334ecaac06a261c66b624, type: 3}
       propertyPath: m_SizeDelta.x
@@ -841,6 +853,10 @@ PrefabInstance:
     - target: {fileID: 22441128, guid: 2e936b2baa9334ecaac06a261c66b624, type: 3}
       propertyPath: m_SizeDelta.y
       value: 38.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11436664, guid: 2e936b2baa9334ecaac06a261c66b624, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e936b2baa9334ecaac06a261c66b624, type: 3}
@@ -1018,7 +1034,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0.9332624, b: 0.972549, a: 0.69803923}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1358,7 +1374,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0.9332624, b: 0.972549, a: 0.69803923}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
