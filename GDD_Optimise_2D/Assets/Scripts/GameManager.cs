@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     // GetDistanceToNeighbours
     private Vector3 currentFramePos;
+    private bool leftFrame;
 
     //CheckRespawnFrames()
     private GameObject frame;
@@ -140,6 +141,8 @@ public class GameManager : MonoBehaviour
         //
         int n = 0;
         float currX = leftExtent;
+        //frameWidth = frame.GetComponent<BoxCollider>().bounds.size.x;
+
         while (currX < rightExtent)
         {
             Vector3 currPos = new Vector3(currX, 0f, 0f);
@@ -305,9 +308,6 @@ public class GameManager : MonoBehaviour
     //
     float GetDistanceToNeighbour(GameObject frame)
     {
-        // Get the width of the frame
-        //
-        float frameWidth = frame.gameObject.GetComponent<BoxCollider>().bounds.size.x;
         float distance = 0f;
 
         // Set up the ray parameters
@@ -339,7 +339,7 @@ public class GameManager : MonoBehaviour
             //
             // HINT: Why is this function doing two different things?
             //
-            bool leftFrame = true;
+            leftFrame = true;
             foreach(GameObject f in framesList)
             {
                 if(frame.gameObject.transform.position.x > f.gameObject.transform.position.x)
@@ -547,7 +547,6 @@ public class GameManager : MonoBehaviour
                         if(f == hitFrame)
                         {
                             frameToDelete = hitFrame;
-                            Debug.Log(hitFrame);
                         }
                     }
 
