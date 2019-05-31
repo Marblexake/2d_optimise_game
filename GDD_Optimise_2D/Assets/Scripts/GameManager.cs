@@ -385,13 +385,6 @@ public class GameManager : MonoBehaviour
             //
             // Changes: Cached the variable leftFrame
             leftFrame = true;
-            //foreach(GameObject f in framesList)
-            //{
-            //    if(frame.gameObject.transform.position.x > f.gameObject.transform.position.x)
-            //    {
-            //        leftFrame = false;
-            //    }
-            //}
             if (leftFrame == true && frame.gameObject.transform.position.x > -gameWidth/2f)
             {
                 distanceToNeighbour = gameWidth * 2f; ;
