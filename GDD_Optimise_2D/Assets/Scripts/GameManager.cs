@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
     // Changes:
     public Object[] sprites;                        // This is the array in which all the sprites/ is kept
     private int randomIndex;                        // This is the random value that chooses which sprite in the array to use
-    private int rand;                               // This is the value that determines whether the frames are matched or not matched.
     private Camera mainCam;                         // Reference to Camera.main
     private Vector3 mousePos;                       // Reference to current mousePos in the Game view
     private float time;                             // Reference for background sprites function in Update()
@@ -31,22 +30,28 @@ public class GameManager : MonoBehaviour
     private float numChildren;                      // The number of children in the top and bottom of frame 
                                                     //(which through extensive testing is always 6)
 
+    // UpdateFrames() variables
+    private GameObject top;                         // Top half of the frame
+    private GameObject bottom;                      // Bottom half of the frame
+    private int rand;                               // This is the value that determines whether the frames are matched or not matched.
+    private bool mirror;                            // Value that determines whether the frames should be mirrored or not
+
     // For hitframe checks in Update()
-    private Transform hitFrameTop;
-    private Transform hitFrameBottom;
-    private string topSpriteName;
-    private string bottomSpriteName;
+    private Transform hitFrameTop;                  // Top half of the frame that has been hit
+    private Transform hitFrameBottom;               // Top half of the frame that has been hit
+    private string topSpriteName;                   // Name of each sprite in the top half
+    private string bottomSpriteName;                // Name of each sprite in the top half
 
     private bool matched;
 
     // MoveFrames() variables
-    private Vector3 speedUp;
-    private Vector3 normalSpeed;
+    private Vector3 speedUp;                        // Vector3 for speeding up the frame
+    private Vector3 normalSpeed;                    // Vector3 for the frames' normal speed
 
     // Raycasting related variables
-    private Vector3 raypos;
-    private RaycastHit hit;
-    private GameObject hitFrame;
+    private Vector3 raypos;                         // Positioning of the ray
+    private RaycastHit hit;                         // Whatever has been hit will be referenced with this in the Raycast function
+    private GameObject hitFrame;                    // GameObject version of "hit", so that it can actually be used in Update()
 
     // PlaySound() variables;
     private AudioSource audioSource;                // AudioSource Component that will be added to the GameObject on Start()
@@ -55,7 +60,7 @@ public class GameManager : MonoBehaviour
     private AudioClip clipWrong;                    // AudioClip for the WRONG sound
 
     // CheckHitFrame() variables
-    private GameObject checkHitFrame;
+    private GameObject checkHitFrame;               // Appropriately named variable for checkHitFrame, reference for the frame that has been hit
 
     // GetDistanceToNeighbours
     private Vector3 currentFramePos;                // Reference to current iterated frame position
@@ -63,7 +68,7 @@ public class GameManager : MonoBehaviour
     private float distanceToNeighbour;              // Renamed the variable for easier identification, also used in MoveFrames()
 
     //CheckRespawnFrames(), Start() in while loop
-    private GameObject frame;                       // 
+    private GameObject frame;                       // Cached reference for frame
     //***********************************************************************************************************************
 
 
@@ -172,9 +177,11 @@ public class GameManager : MonoBehaviour
         while (currX < rightExtent)
         {
             Vector3 currPos = new Vector3(currX, 0f, 0f);
+
             // Changes: Instead of creating a blank frame, I made the game already generate "random frames", to take away one
             // step from the process of "making the game at the start"
-            frame = CreateFrame();
+            frame = Instantiate(framePrefab);
+            UpdateFrame(frame);
             frame.name = "Frame_" + n++;
 
             frame.transform.position = currPos;
@@ -196,8 +203,8 @@ public class GameManager : MonoBehaviour
     // Creates a new frame. This is done when all the initial frames are created before the
     // game starts, and also when a frame is destroyed after it moves past leftExtent and a
     // new frame is created to take its place.
-    //
-    private GameObject CreateFrame()
+    // Changes: Replaced the name with UpdateFrame to illustrate accurately what the function does
+    private GameObject UpdateFrame(GameObject frame)
     {
         // Instantiate a new frame from the frame prefab. Note that the frame prefab has 
         // pre-existing top and bottom sprites already. These default pre-existing sprites  
@@ -210,7 +217,7 @@ public class GameManager : MonoBehaviour
         //
         // HINT: What problem is being solved here, and is this a good way to solve it?
         //
-        newFrame = Instantiate(framePrefab);
+        newFrame = frame;
 
         // Each frame has a set of top and bottom sprites. All the top and bottom sprites must 
         // match to score a point. The top and bottom sprites are children of a top or a
@@ -225,7 +232,7 @@ public class GameManager : MonoBehaviour
 
         // Get a reference to the top parent
         //
-        GameObject top = newFrame.gameObject.transform.GetChild(0).gameObject;
+        top = newFrame.gameObject.transform.GetChild(0).gameObject;
 
         // Loop across all the top children in the new frame
         //
@@ -243,12 +250,12 @@ public class GameManager : MonoBehaviour
 
         // Now we replace the default bottom sprites with new sprites
         //
-        GameObject bottom = newFrame.gameObject.transform.GetChild(1).gameObject;
+        bottom = newFrame.gameObject.transform.GetChild(1).gameObject;
 
         // Get a random number between 1 and 10. For integers, the Random.Range function is not
         // inclusive of the max value argument, which is why it is 11.
         //
-        int rand = Random.Range(1, 11);
+        rand = Random.Range(1, 11);
 
         // Check the value of the random number. If it is >=5, then set this new frame to be
         // mirrored (top and bottom sprites are the same). If rand is <=4, then set the frame
@@ -275,8 +282,7 @@ public class GameManager : MonoBehaviour
             //
             if (mirror)
             {
-                //sprite = Instantiate(top.transform.GetChild(i + numChildren).gameObject);
-
+                // Changes: Changes the sprites instead of spawning them of the older one.
                 bottom.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = top.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite;
             }
             else
@@ -285,6 +291,8 @@ public class GameManager : MonoBehaviour
                 // sprites.
                 //
                 randomIndex = Random.Range(0, sprites.Length);
+
+                // Changes: Now it changes the sprites instead of replacing them.
                 bottom.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)sprites[randomIndex];
             }
         }      
@@ -564,33 +572,18 @@ public class GameManager : MonoBehaviour
                 //
                 if (matched == true)
                 {
-                    GameObject frameToDelete = null;
-
-                    // Find the frame to delete in the frames list
-                    //
-                    foreach(GameObject f in framesList)
-                    {
-                        if(f == hitFrame)
-                        {
-                            frameToDelete = hitFrame;
-                        }
-                    }
+                    // Changes: Removed some old code that was not needed anymore due to updated code in CreateFrames()
 
                     // Create the new frame that will replace frameToDelete. This is much the same
                     // as in the CheckRespawnFrames function, so it is guaranteed to work.
                     //
                     newX = endFrame.transform.position.x + frameWidth;
                     gap = frameWidth * 0.1f;
-                    newFrame = CreateFrame();
-                    newFrame.name = frameToDelete.name;
+                    newFrame = UpdateFrame(hitFrame);
                     newFrame.transform.position = new Vector3(newX + gap, 0f, 0f);
-
+                    // Changes: Sets the new updated frame to be the endFrame
                     endFrame = newFrame;
-                    framesList.Add(newFrame);
 
-                    framesList.Remove(frameToDelete);
-                    Destroy(frameToDelete);
-                    
                     // Play a particle system for success or failure. The particle system to be
                     // instantiated is a pulic property set in the Inspector.
                     //
