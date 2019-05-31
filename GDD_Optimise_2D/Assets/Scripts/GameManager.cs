@@ -135,6 +135,10 @@ public class GameManager : MonoBehaviour
         // Changes: Added a camera.main reference so that a reference of it isn't constantly created like previously
         mainCam = Camera.main;
 
+        // Changes: Vector3 for localScale of particle systems
+        failParticleLocalScale = new Vector3(15, 15, 1);
+        successParticleLocalScale = new Vector3(10, 10, 1);
+
 
         // Find the height and width of the game view in world units
         //
@@ -381,13 +385,13 @@ public class GameManager : MonoBehaviour
             //
             // Changes: Cached the variable leftFrame
             leftFrame = true;
-            foreach(GameObject f in framesList)
-            {
-                if(frame.gameObject.transform.position.x > f.gameObject.transform.position.x)
-                {
-                    leftFrame = false;
-                }
-            }
+            //foreach(GameObject f in framesList)
+            //{
+            //    if(frame.gameObject.transform.position.x > f.gameObject.transform.position.x)
+            //    {
+            //        leftFrame = false;
+            //    }
+            //}
             if (leftFrame == true && frame.gameObject.transform.position.x > -gameWidth/2f)
             {
                 distanceToNeighbour = gameWidth * 2f; ;
