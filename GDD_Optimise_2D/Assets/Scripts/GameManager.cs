@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI timeText;                // Updates every second
     public ParticleSystem successParticles;         // Particle system to run when a match is correct
     public ParticleSystem failParticles;            // Particle system to run when a match is wrong
+
+    // Changes: Renamed the variables
     public GameObject mouse;                        // Background sprite that oscillates left to right 
     public GameObject rabbit;                       // Background sprite that oscillates left to right 
     public GameObject panda;                        // Background sprite that oscillates left to right 
@@ -26,6 +28,8 @@ public class GameManager : MonoBehaviour
     private float gap;                              // The gap between the frames
     private float newX;                             // X position for new Frames
     private GameObject newFrame;                    // Reference to the new frame
+    private Vector3 failParticleLocalScale;         // Vector3 scale for fail particles
+    private Vector3 successParticleLocalScale;      // Vector3 scale for success particles
 
     private float numChildren;                      // The number of children in the top and bottom of frame 
                                                     //(which through extensive testing is always 6)
@@ -33,8 +37,8 @@ public class GameManager : MonoBehaviour
     // UpdateFrames() variables
     private GameObject top;                         // Top half of the frame
     private GameObject bottom;                      // Bottom half of the frame
-    private int rand;                               // This is the value that determines whether the frames are matched or not matched.
-    private bool mirror;                            // Value that determines whether the frames should be mirrored or not
+    private int rand;                               // This is the numerical value that determines whether the frames are matched or not matched.
+    private bool mirror;                            // Boolean value that determines whether the frames should be mirrored or not
 
     // For hitframe checks in Update()
     private Transform hitFrameTop;                  // Top half of the frame that has been hit
@@ -42,7 +46,7 @@ public class GameManager : MonoBehaviour
     private string topSpriteName;                   // Name of each sprite in the top half
     private string bottomSpriteName;                // Name of each sprite in the top half
 
-    private bool matched;
+    private bool matched;                           // The boolean value that determines whether the frames are matched or not
 
     // MoveFrames() variables
     private Vector3 speedUp;                        // Vector3 for speeding up the frame
@@ -93,17 +97,16 @@ public class GameManager : MonoBehaviour
     private Vector3 bk2PositionA, bk2PositionB;
     private Vector3 bk3PositionA, bk3PositionB;
 
-    private float frameWidth;               // The width of a frame of sprites
-    private List<GameObject> framesList;        // Created frames are stored in this list
-    private bool initialised = false;       // When initialised is true, the game can start
+    private float frameWidth;                       // The width of a frame of sprites
+    private List<GameObject> framesList;            // Created frames are stored in this list
+    private bool initialised = false;               // When initialised is true, the game can start
 
     int score = 0;
     int seconds = 0;
-    float counterTime = 0;                  // Used for the Seconds UI display
-    float backgroundTime = 0;               // Used for the background sprites oscillation
+    float counterTime = 0;                          // Used for the Seconds UI display
+    float backgroundTime = 0;                       // Used for the background sprites oscillation
 
-    //GameObject mouse, rabbit, panda;        // The oscillating background sprites
-    bool showBackgroundCharacters = false;  // The background sprites are shown intermittently, i.e. on/off
+    bool showBackgroundCharacters = false;          // The background sprites are shown intermittently, i.e. on/off
 
     // When a new frame is created, it must be placed behind the rightmost, or end, frame. endFrame
     // is the rightmost frame. This is updated every time a new frame is created and placed at the end.
@@ -129,7 +132,7 @@ public class GameManager : MonoBehaviour
         // Changes: Added this since all numChildren in the script return the same value as all frames have the same structure
         numChildren = framePrefab.transform.GetChild(0).childCount;
 
-        // Changes: Added a camera.main reference so that a reference of it isn't created like previously
+        // Changes: Added a camera.main reference so that a reference of it isn't constantly created like previously
         mainCam = Camera.main;
 
 
@@ -139,6 +142,7 @@ public class GameManager : MonoBehaviour
         gameWidth = mainCam.aspect * gameHeight;
 
         // Calculate the X axis values for frame removal and the positioning of new frames
+
         // Changes: I reduced the "true" gamewidth aka the size of the area where the sprites spawn so that it doesn't have unneccessary 
         // frames that the player don't actually see.
         leftExtent = -gameWidth*1f;
@@ -177,10 +181,8 @@ public class GameManager : MonoBehaviour
         while (currX < rightExtent)
         {
             Vector3 currPos = new Vector3(currX, 0f, 0f);
-
-            // Changes: Instead of creating a blank frame, I made the game already generate "random frames", to take away one
-            // step from the process of "making the game at the start"
             frame = Instantiate(framePrefab);
+            // Changes: Added this so that when the game starts, the frames are already randomised, instead of the default all rats frame
             UpdateFrame(frame);
             frame.name = "Frame_" + n++;
 
@@ -203,6 +205,7 @@ public class GameManager : MonoBehaviour
     // Creates a new frame. This is done when all the initial frames are created before the
     // game starts, and also when a frame is destroyed after it moves past leftExtent and a
     // new frame is created to take its place.
+
     // Changes: Replaced the name with UpdateFrame to illustrate accurately what the function does
     private GameObject UpdateFrame(GameObject frame)
     {
@@ -262,7 +265,7 @@ public class GameManager : MonoBehaviour
         // to be unmirrored. If the frame is mirrored, then the each bottom sprite will be a
         // copy of its corresponding top sprite.
         //
-        bool mirror = rand > 0 ? true : false;
+        mirror = rand > 0 ? true : false;
 
         // Loop over all the bottom sprites
         //
@@ -321,10 +324,12 @@ public class GameManager : MonoBehaviour
 
             if (distanceToNeighbour > frameWidth * 0.5f)
             {
+                // Changes: Cached the Vectors
                 frame.GetComponent<Rigidbody>().velocity = speedUp;
             }
             else
             {
+                // Changes: Cached the Vectors
                 frame.GetComponent<Rigidbody>().velocity = normalSpeed;
             }
         }
@@ -341,10 +346,12 @@ public class GameManager : MonoBehaviour
     //
     float GetDistanceToNeighbour(GameObject frame)
     {
+        // Renamed the variable to be more appropriate
         distanceToNeighbour = 0f;
 
         // Set up the ray parameters
         //
+        // Changes: Cached the variables
         currentFramePos = frame.gameObject.transform.position;
         raypos = new Vector3(currentFramePos.x - frameWidth, 0f, currentFramePos.z);
         
@@ -372,6 +379,7 @@ public class GameManager : MonoBehaviour
             //
             // HINT: Why is this function doing two different things?
             //
+            // Changes: Cached the variable leftFrame
             leftFrame = true;
             foreach(GameObject f in framesList)
             {
@@ -431,7 +439,7 @@ public class GameManager : MonoBehaviour
                 // Changes: Removed some old code as they are not needed anymore since object pooling is implemented here.
                 // It used to be that a new frame was created here, and then the new frame was the endframe, and the old frame was removed
                 // from the list and destroyed and the newFrame was added to the list. Now i simply set the current iterated frame x value to 
-                // the current endFrame and then set the current iterated frame as the new endFrame.
+                // the current endFrame x value and then set the current iterated frame as the new endFrame.
             }
         }
     }
@@ -444,10 +452,12 @@ public class GameManager : MonoBehaviour
     //
     private GameObject CheckHitFrame()
     {
+        // Changes: Cached the variable and renamed it to be more obvious what it contains
         checkHitFrame = null;
 
         if (Input.GetMouseButtonDown(0))
         {
+            // Changes: Cached the variable and RaycastHit hit is now declared outside the function
             raypos = mainCam.ScreenToWorldPoint(Input.mousePosition);
 
             if (Physics.Raycast(raypos, Vector3.forward, out hit, Mathf.Infinity))
@@ -537,6 +547,7 @@ public class GameManager : MonoBehaviour
 
             // Check if the player has selected any of the frames
             //
+            // Changes: Cached the variable
             hitFrame = CheckHitFrame();
 
             // If a frame has been selected, check if it is mirrored or not (check if all the bottom
@@ -546,13 +557,11 @@ public class GameManager : MonoBehaviour
             {
                 matched = true;
 
-                // Changes: Added References to the hitframe childs outside the loop
+                // Changes: Cached these variables and renamed them to better illustrate what they contain
                 hitFrameTop = hitFrame.transform.GetChild(0);
                 hitFrameBottom = hitFrame.transform.GetChild(1);
                 for (int i = 0; i < numChildren; i++)
                 {
-                    // Get each top sprite (s1) and its corresponding bottom sprite (s2)
-                    //
                     // Get the name of each sprite
                     //
                     topSpriteName = hitFrameTop.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite.name;
@@ -577,9 +586,11 @@ public class GameManager : MonoBehaviour
                     // Create the new frame that will replace frameToDelete. This is much the same
                     // as in the CheckRespawnFrames function, so it is guaranteed to work.
                     //
+                    // Changes: Cached these 3 variables
                     newX = endFrame.transform.position.x + frameWidth;
                     gap = frameWidth * 0.1f;
                     newFrame = UpdateFrame(hitFrame);
+
                     newFrame.transform.position = new Vector3(newX + gap, 0f, 0f);
                     // Changes: Sets the new updated frame to be the endFrame
                     endFrame = newFrame;
@@ -588,7 +599,8 @@ public class GameManager : MonoBehaviour
                     // instantiated is a pulic property set in the Inspector.
                     //
                     ParticleSystem ps = Instantiate(successParticles);
-                    ps.transform.localScale = new Vector3(10, 10, 1);
+                    // Changes: Cached the vector3 scale
+                    ps.transform.localScale = successParticleLocalScale;
                     mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
                     ps.transform.position = mousePos;
 
@@ -599,6 +611,7 @@ public class GameManager : MonoBehaviour
                     // Increment score, since the player has scored a point
                     //
                     score++;
+                    // Changes: Moved function so that it is only called when the player scores, instead of calling it every frame
                     UpdateScore();
                 }
                 else
@@ -606,7 +619,8 @@ public class GameManager : MonoBehaviour
                     // Play the fail particle system
 
                     ParticleSystem ps = Instantiate(failParticles);
-                    ps.transform.localScale = new Vector3(15, 15, 1);
+                    // Changes: Cached the vector3 scale
+                    ps.transform.localScale = failParticleLocalScale;
                     mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
                     ps.transform.position = mousePos;
 
@@ -618,7 +632,7 @@ public class GameManager : MonoBehaviour
 
             // Update the positions of the oscillating background sprites. This is done using
             // the PingPong function
-            //
+            // Changes: Cached the time variable
             time = Mathf.PingPong(Time.time * 1f, 1);
             mouse.transform.position = Vector3.Lerp(bk1PositionA, bk1PositionB, time);
             rabbit.transform.position = Vector3.Lerp(bk2PositionA, bk2PositionB, time);

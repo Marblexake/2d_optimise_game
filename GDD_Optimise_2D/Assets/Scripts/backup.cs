@@ -11,7 +11,7 @@ public class backup : MonoBehaviour
     public TextMeshProUGUI timeText;                // Updates every second
     public ParticleSystem successParticles;         // Particle system to run when a match is correct
     public ParticleSystem failParticles;            // Particle system to run when a match is wrong
-    public GameObject background1;                  // Background sprite that oscillates left to right 
+    public GameObject background1;                  // Background sprite that oscillates left to right (Changed)
     public GameObject background2;                  // Background sprite that oscillates left to right 
     public GameObject background3;                  // Background sprite that oscillates left to right 
 
@@ -45,7 +45,7 @@ public class backup : MonoBehaviour
     float counterTime = 0;                  // Used for the Seconds UI display
     float backgroundTime = 0;               // Used for the background sprites oscillation
 
-    GameObject mouse, rabbit, panda;        // The oscillating background sprites
+    GameObject mouse, rabbit, panda;        // The oscillating background sprites (Removed)
     bool showBackgroundCharacters = false;  // The background sprites are shown intermittently, i.e. on/off
 
     // When a new frame is created, it must be placed behind the rightmost, or end, frame. endFrame
@@ -64,7 +64,7 @@ public class backup : MonoBehaviour
         leftExtent = -gameWidth * 2f;
         rightExtent = gameWidth * 2f;
 
-        // Get a reference to each background sprite for oscillation
+        // Get a reference to each background sprite for oscillation (Removed)
         //
         mouse = GameObject.Find("MouseBackground");
         rabbit = GameObject.Find("RabbitBackground");
