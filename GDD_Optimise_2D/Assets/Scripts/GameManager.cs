@@ -561,6 +561,7 @@ public class GameManager : MonoBehaviour
                 {
                     // Get the name of each sprite
                     //
+                    // Changes: Renamed the variable
                     topSpriteName = hitFrameTop.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite.name;
                     bottomSpriteName = hitFrameBottom.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite.name;
 
