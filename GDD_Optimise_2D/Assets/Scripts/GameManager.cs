@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     private GameObject newFrame;                    // Reference to the new frame
     private Vector3 failParticleLocalScale;         // Vector3 scale for fail particles
     private Vector3 successParticleLocalScale;      // Vector3 scale for success particles
+    public GameObject pauseButton;                  // Reference to the pause button
 
     private float numChildren;                      // The number of children in the top and bottom of frame 
                                                     //(which through extensive testing is always 6)
@@ -462,6 +463,7 @@ public class GameManager : MonoBehaviour
                 if (hit.collider != null)
                 {
                     checkHitFrame = hit.collider.gameObject; //returns the frame hit
+
                 }
             }
         }
@@ -544,8 +546,11 @@ public class GameManager : MonoBehaviour
 
             // Check if the player has selected any of the frames
             //
-            // Changes: Cached the variable
-            hitFrame = CheckHitFrame();
+            // Changes: Cached the variable and added this if statement to prevent hit registers when the game is paused
+            if (!PauseMenu.GameIsPaused)
+            {
+                hitFrame = CheckHitFrame();
+            }
 
             // If a frame has been selected, check if it is mirrored or not (check if all the bottom
             // sprites match their corresponding top sprites). Process the frames accordingly.

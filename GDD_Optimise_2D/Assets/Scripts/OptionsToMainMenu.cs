@@ -9,6 +9,7 @@ public class OptionsToMainMenu : MonoBehaviour
 
     public void ToMainMenu()
     {
+        // These set the relating groups of UI elements active or not
         mainMenu.SetActive(true);
         optionsMenu.SetActive(false);
     }

@@ -18,6 +18,8 @@ public class MusicManager : MonoBehaviour
         // Finds the slider values in player prefs and updates them accordingly as the player may have changed it in-game
         backgroundMusicSlider.value = PlayerPrefs.GetFloat("BackgroundMusicVolume", 1);
         soundEffectsSlider.value = PlayerPrefs.GetFloat("SoundEffectsVolume", 1);
+
+
     }
 
     // Update is called once per frame
