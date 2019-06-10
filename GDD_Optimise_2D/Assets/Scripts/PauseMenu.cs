@@ -7,11 +7,19 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool GameIsPaused = false;        // Static variable so that other scripts can reference this
 
+    public static bool ChangeSprites;
+    private static int spritesIntBool;
+
+    public GameManager gameManager;
     public GameObject pauseMenu;                    // Reference to the Pause Menu group
     public GameObject optionsMenu;                  // Reference to the Options Menu group
     public GameObject pauseButton;                  // Reference to the pause button
     public GameObject restartButton;                // Reference to the restart button
 
+    public void Start()
+    {
+        spritesIntBool = PlayerPrefs.GetInt("ChangeTheme", 1);
+    }
     public void Update()
     {
         // This is to check if the game is supposed to be paused when starting as when quitting the game, the game is paused, and needs to be resumed again when started.
@@ -68,5 +76,26 @@ public class PauseMenu : MonoBehaviour
         // These set the relating groups of UI elements active or not
         pauseMenu.SetActive(true);
         optionsMenu.SetActive(false);
+    }
+
+    public void swapSprites()
+    {
+        if(spritesIntBool == 0)
+        {
+            ChangeSprites = false;
+            spritesIntBool = 1;
+            gameManager.UpdateAllFrames();
+            
+            PlayerPrefs.SetInt("ChangeTheme", spritesIntBool);
+
+        }
+        else
+        {
+            ChangeSprites = true;
+            spritesIntBool = 0;
+            gameManager.UpdateAllFrames();
+            
+            PlayerPrefs.SetInt("ChangeTheme", spritesIntBool);
+        }
     }
 }

@@ -232,6 +232,7 @@ MonoBehaviour:
   pauseMenu: {fileID: 1801861025}
   optionsMenu: {fileID: 2099775487}
   pauseButton: {fileID: 1039940252}
+  restartButton: {fileID: 1996091401}
 --- !u!1 &91941473
 GameObject:
   m_ObjectHideFlags: 0
@@ -1721,6 +1722,7 @@ MonoBehaviour:
   rabbit: {fileID: 1046666315}
   panda: {fileID: 1449890812}
   sprites: []
+  sprites2: []
   pauseButton: {fileID: 0}
 --- !u!4 &819658742
 Transform:
@@ -4207,7 +4209,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -9, y: 44.8}
+  m_AnchoredPosition: {x: -9, y: 44.80005}
   m_SizeDelta: {x: 37.2, y: 37.181}
   m_Pivot: {x: 1, y: 1.0000001}
 --- !u!114 &1996091403
@@ -4391,7 +4393,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 76308732}
-        m_MethodName: ToPauseMenu
+        m_MethodName: OptionsToPauseMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
     //***********************************************************************************************************************
     // Changes:
     public Object[] sprites;                        // This is the array in which all the sprites/ is kept
+    public Object[] sprites2;
+    private Object[] themeChange;
+    private GameObject frameToBeChanged;
     private int randomIndex;                        // This is the random value that chooses which sprite in the array to use
     private Camera mainCam;                         // Reference to Camera.main
     private Vector3 mousePos;                       // Reference to current mousePos in the Game view
@@ -117,6 +120,7 @@ public class GameManager : MonoBehaviour
     {
         // Changes: Placing all the images into an array right at the start of the game
         sprites = Resources.LoadAll("Images/animals", typeof(Sprite));
+        sprites2 = Resources.LoadAll("Images/fruit", typeof(Sprite));
 
         // Changes: MoveFrames() variables
         speedUp = new Vector3(speed * 10f, 0f, 0f);
@@ -214,7 +218,7 @@ public class GameManager : MonoBehaviour
     // new frame is created to take its place.
 
     // Changes: Replaced the name with UpdateFrame to illustrate accurately what the function does
-    private GameObject UpdateFrame(GameObject frame)
+    public GameObject UpdateFrame(GameObject frame)
     {
         // Instantiate a new frame from the frame prefab. Note that the frame prefab has 
         // pre-existing top and bottom sprites already. These default pre-existing sprites  
@@ -244,6 +248,17 @@ public class GameManager : MonoBehaviour
         //
         top = newFrame.gameObject.transform.GetChild(0).gameObject;
 
+        // Changes:
+        if (PauseMenu.ChangeSprites)
+        {
+            themeChange = sprites2;
+        }
+        else
+        {
+            themeChange = sprites;
+            Debug.Log("theme was changed back to normal");
+        }
+
         // Loop across all the top children in the new frame
         //
         for (int i = 0; i < numChildren; i++)
@@ -251,11 +266,11 @@ public class GameManager : MonoBehaviour
             // Each sprite gameobject in the new frame must be replaced with a new sprite gameobject.
             // Choose a random sprite from the sprites array.
             //
-            randomIndex = Random.Range(0, sprites.Length); //Move this out of the loop 
+            randomIndex = Random.Range(0, themeChange.Length); //Move this out of the loop 
 
             // Changes: This gets the top category's child(i).gameObject and gets the Sprite Renderer component and changes the sprite to
             // a random one in the Resource array.
-            top.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)sprites[randomIndex];
+            top.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)themeChange[randomIndex];
         }
 
         // Now we replace the default bottom sprites with new sprites
@@ -300,10 +315,10 @@ public class GameManager : MonoBehaviour
                 // The frame is not mirrored, so the bottom sprites must be different from the top
                 // sprites.
                 //
-                randomIndex = Random.Range(0, sprites.Length);
+                randomIndex = Random.Range(0, themeChange.Length);
 
                 // Changes: Now it changes the sprites instead of replacing them.
-                bottom.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)sprites[randomIndex];
+                bottom.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)themeChange[randomIndex];
             }
         }      
         // Return the newly created frame back to the calling code
@@ -645,6 +660,17 @@ public class GameManager : MonoBehaviour
 
             UpdateTime();
             ShowBackgroundCharacters();
+        }
+
+    }
+
+    // Changes:
+    public void UpdateAllFrames()
+    {
+        for (int i = 0; i < framesList.Count; i++)
+        {
+            frameToBeChanged = framesList[i]; 
+            UpdateFrame(frameToBeChanged);
         }
 
     }
