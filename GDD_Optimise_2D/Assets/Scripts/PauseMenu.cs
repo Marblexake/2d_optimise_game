@@ -27,6 +27,7 @@ public class PauseMenu : MonoBehaviour
         // These set the relating groups of UI elements active or not
         pauseMenu.SetActive(false);
         pauseButton.SetActive(true);
+        restartButton.SetActive(true);
 
         // Sets the timeScale back to 1, right back to the normal speed of time.
         Time.timeScale = 1f;

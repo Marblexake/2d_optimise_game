@@ -140,6 +140,8 @@ public class GameManager : MonoBehaviour
         failParticleLocalScale = new Vector3(15, 15, 1);
         successParticleLocalScale = new Vector3(10, 10, 1);
 
+        Application.targetFrameRate = 60;
+
 
         // Find the height and width of the game view in world units
         //
