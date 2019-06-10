@@ -7,8 +7,8 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool GameIsPaused = false;        // Static variable so that other scripts can reference this
 
-    public static bool ChangeSprites;
-    private static int spritesIntBool;
+    public static bool ChangeSprites;               // Reference for other scripts to take
+    private int spritesIntBool;                     // ChangeSprites boolean in int form
 
     public GameManager gameManager;
     public GameObject pauseMenu;                    // Reference to the Pause Menu group
@@ -20,6 +20,7 @@ public class PauseMenu : MonoBehaviour
     {
         spritesIntBool = PlayerPrefs.GetInt("ChangeTheme", 1);
     }
+
     public void Update()
     {
         // This is to check if the game is supposed to be paused when starting as when quitting the game, the game is paused, and needs to be resumed again when started.
@@ -78,23 +79,35 @@ public class PauseMenu : MonoBehaviour
         optionsMenu.SetActive(false);
     }
 
+    // Changes the sprite
     public void swapSprites()
     {
+        // Since playerPrefs do not take in boolean, i had to resort to using int as a way to store "bool"; 0 = false, 1 = true
         if(spritesIntBool == 0)
         {
+            // Sets sprite change to false
             ChangeSprites = false;
+            // Sets intBool to "true", as it is an if statement
             spritesIntBool = 1;
+
+            // Calls the function to update all the frames in GameManager
             gameManager.UpdateAllFrames();
             
+            // Saves the data into PlayerPrefs
             PlayerPrefs.SetInt("ChangeTheme", spritesIntBool);
 
         }
         else
         {
+            // Sets sprite change to true
             ChangeSprites = true;
+            // Sets intBool to "false", as it is an if statement
             spritesIntBool = 0;
+
+            // Calls the function to update all the frames in GameManager
             gameManager.UpdateAllFrames();
-            
+
+            // Saves the data into PlayerPrefs
             PlayerPrefs.SetInt("ChangeTheme", spritesIntBool);
         }
     }
