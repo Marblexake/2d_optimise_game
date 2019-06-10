@@ -10,6 +10,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenu;                    // Reference to the Pause Menu group
     public GameObject optionsMenu;                  // Reference to the Options Menu group
     public GameObject pauseButton;                  // Reference to the pause button
+    public GameObject restartButton;                // Reference to the restart button
 
     public void Update()
     {
@@ -38,6 +39,7 @@ public class PauseMenu : MonoBehaviour
         // These set the relating groups of UI elements active or not
         pauseMenu.SetActive(true);
         pauseButton.SetActive(false);
+        restartButton.SetActive(false);
 
         //Sets the timeScale to 0, so that "game time" effectively stops.
         Time.timeScale = 0f;
@@ -60,7 +62,7 @@ public class PauseMenu : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    public void ToPauseMenu()
+    public void OptionsToPauseMenu()
     {
         // These set the relating groups of UI elements active or not
         pauseMenu.SetActive(true);

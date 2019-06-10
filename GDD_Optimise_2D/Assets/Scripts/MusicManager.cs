@@ -6,19 +6,19 @@ using UnityEngine.UI;
 public class MusicManager : MonoBehaviour
 {
 
-    public Slider backgroundMusicSlider;
-    public Slider soundEffectsSlider;
+    public Slider backgroundMusicSlider;            // Reference to the slider that controls the background music
+    public Slider soundEffectsSlider;               // Reference to the slider that controls the sound effect slider
 
-    public AudioSource backgroundMusicSource;
+    public AudioSource backgroundMusicSource;       // Reference to the audiosource for background music
+    public AudioSource soundEffectsSource;          // Reference to the sound effects source
 
-    private float SoundEffectsVolume;
+    private float SoundEffectsVolume;               // For the main menu sound effects since there is no sound effects in the main menu
 
     void Start()
     {
         // Finds the slider values in player prefs and updates them accordingly as the player may have changed it in-game
         backgroundMusicSlider.value = PlayerPrefs.GetFloat("BackgroundMusicVolume", 1);
         soundEffectsSlider.value = PlayerPrefs.GetFloat("SoundEffectsVolume", 1);
-
 
     }
 
@@ -43,7 +43,15 @@ public class MusicManager : MonoBehaviour
         // Saves the slider value to a variable
         SoundEffectsVolume = soundEffectsSlider.value;
 
+        // Checks if there is an object referenced in this var
+        if (soundEffectsSource)
+        {
+            // Sets sound effects source volume to the value the player wants
+            soundEffectsSource.volume = soundEffectsSlider.value;
+        }
+
         // Saves the value in player prefs
         PlayerPrefs.SetFloat("SoundEffectsVolume", SoundEffectsVolume);
     }
+
 }
