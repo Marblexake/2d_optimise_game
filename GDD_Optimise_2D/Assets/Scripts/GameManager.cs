@@ -20,8 +20,8 @@ public class GameManager : MonoBehaviour
     // This is where I place all the variables I have changed/declared outside their functions.
     //***********************************************************************************************************************
     // Changes:
-    public Object[] sprites;                        // This is the array in which all the sprites/ is kept
-    public Object[] sprites2;
+    public Object[] animalSprites;                  // This is the array in which all the sprites/ is kept
+    public Object[] fruitSprites;
     private Object[] themeChange;
     private GameObject frameToBeChanged;
     private int randomIndex;                        // This is the random value that chooses which sprite in the array to use
@@ -119,8 +119,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // Changes: Placing all the images into an array right at the start of the game
-        sprites = Resources.LoadAll("Images/animals", typeof(Sprite));
-        sprites2 = Resources.LoadAll("Images/fruit", typeof(Sprite));
+        animalSprites = Resources.LoadAll("Images/animals", typeof(Sprite));
+        fruitSprites = Resources.LoadAll("Images/fruit", typeof(Sprite));
 
         // Changes: MoveFrames() variables
         speedUp = new Vector3(speed * 10f, 0f, 0f);
@@ -247,15 +247,14 @@ public class GameManager : MonoBehaviour
         //
         top = newFrame.gameObject.transform.GetChild(0).gameObject;
 
-        // Changes:
+        // Changes: This if statement checks if the sprites are to be changed, if it is (ChangeSprites = true), then change the sprites to the fruits, else change it to the animals
         if (PauseMenu.ChangeSprites)
         {
-            themeChange = sprites2;
+            themeChange = fruitSprites;
         }
         else
         {
-            themeChange = sprites;
-            Debug.Log("theme was changed back to normal");
+            themeChange = animalSprites;
         }
 
         // Loop across all the top children in the new frame
@@ -663,9 +662,10 @@ public class GameManager : MonoBehaviour
 
     }
 
-    // Changes:
+    // Changes: This new method (for enhancments) updates all the sprites to the new theme
     public void UpdateAllFrames()
     {
+        // Loops through the original list of frames
         for (int i = 0; i < framesList.Count; i++)
         {
             frameToBeChanged = framesList[i]; 

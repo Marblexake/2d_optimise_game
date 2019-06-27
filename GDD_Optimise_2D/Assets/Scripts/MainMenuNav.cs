@@ -4,12 +4,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class StartGame : MonoBehaviour
+public class MainMenuNav : MonoBehaviour
 {
     private AsyncOperation sceneLoad;       // Reference to the "operation" of loading the scene.
     public GameObject loadingBar;           // Reference to the loading bar object
-    public GameObject mainMenu;             // Reference to the main menu UI element group
     public Slider loadingSlider;            // Reference to the loading slider UI element
+
+    public GameObject mainMenu;             // Reference to the main menu UI element group
+    public GameObject optionsMenu;          // Reference to the Options menu UI element group
 
 
     public void GameStart(int sceneIndex)
@@ -40,4 +42,20 @@ public class StartGame : MonoBehaviour
             yield return null;
         }
     }
+
+    public void ToMainMenu()
+    {
+        // These set the relating groups of UI elements active or not
+        mainMenu.SetActive(true);
+        optionsMenu.SetActive(false);
+    }
+
+    public void ToOptions()
+    {
+        // These set the relating groups of UI elements active or not
+        mainMenu.SetActive(false);
+        optionsMenu.SetActive(true);
+    }
+
+
 }
