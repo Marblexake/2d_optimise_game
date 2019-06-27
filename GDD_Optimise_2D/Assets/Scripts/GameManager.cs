@@ -232,7 +232,6 @@ public class GameManager : MonoBehaviour
         // HINT: What problem is being solved here, and is this a good way to solve it?
         //
         newFrame = frame;
-
         // Each frame has a set of top and bottom sprites. All the top and bottom sprites must 
         // match to score a point. The top and bottom sprites are children of a top or a
         // bottom empty parent gameobject, which in turn are children of the frame gameobject.
